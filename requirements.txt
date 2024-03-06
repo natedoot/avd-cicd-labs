@@ -1,0 +1,9 @@
+anta
+black
+nornir
+nornir_ansible
+nornir_napalm
+nornir_utils
+pyavd
+pylint
+rich

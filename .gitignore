@@ -1,0 +1,6 @@
+# ignore venv
+**/venv/**
+# ignore avd generated files
+**/intended/**
+# ignore local python env
+.python-version
