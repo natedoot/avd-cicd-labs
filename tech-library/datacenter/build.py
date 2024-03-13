@@ -39,7 +39,7 @@ def config_management(task: Task, eos_designs, avd_facts):
 
 def run():
     # Initialize Nornir object from config_file
-    nr = InitNornir(config_file="config.yml")
+    nr = InitNornir(config_file="tech-library/datacenter/config.yml")
 
     eos_designs = {}
 
