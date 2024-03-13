@@ -1,7 +1,7 @@
 # ignore venv
 **/venv/**
 # ignore avd generated files
-**/intended/**
+**/intended/configs/*.cfg
 # ignore local python env
 .python-version
 # ignore logs
