@@ -7,8 +7,8 @@
       branches-ignore:
         - main
       paths:
-        - 'datacenter/**/host_vars/**'
-        - 'datacenter/**/group_vars/**'
+        - 'tech-library/datacenter/**/host_vars/**'
+        - 'tech-library/datacenter/**/group_vars/**'
   jobs:
     build-configs:
       runs-on: ubuntu-latest
@@ -20,7 +20,7 @@
             cache: 'pip'
         - run: pip install -r requirements.txt
         - run: python tech-library/datacenter/build.py
-        
+
         - name: 'Upload Artifact'
           uses: actions/upload-artifact@v4
           with:

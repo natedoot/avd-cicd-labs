@@ -1,10 +1,17 @@
-"datacenter: domain_a":
-  - tech-library/datacenter/group_vars/DOMAIN_A*
-"datacenter: domain_b":
-  - tech-library/datacenter/group_vars/DOMAIN_B*
-"datacenter: domain_c":
-  - tech-library/datacenter/group_vars/DOMAIN_C*
-"datacenter: backbone":
-  - tech-library/datacenter/group_vars/BACKBONE.yml
-"datacenter: network_services":
-  - tech-library/datacenter/group_vars/NETWORK_SERVICES.yml
+Domain_A_Build:
+  - changed-files:
+    - any-glob-to-any-file: tech-library/datacenter/group_vars/DOMAIN_A*.yml
+Domain_B_Build:
+  - changed-files:
+    - any-glob-to-any-file: tech-library/datacenter/group_vars/DOMAIN_B*.yml
+Domain_C_Build:
+  - changed-files:
+    - any-glob-to-any-file: tech-library/datacenter/group_vars/DOMAIN_C*.yml
+Backbone_Build:
+  - changed-files:
+    - any-glob-to-any-file: tech-library/datacenter/group_vars/BACKBONE.yml
+Network_Services_Build:
+  - changed-files:
+    - any-glob-to-any-file: tech-library/datacenter/group_vars/NETWORK_SERVICES.yml
+Deploy:
+  - base-branch: 'main'
