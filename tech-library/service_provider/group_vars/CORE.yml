@@ -1,0 +1,82 @@
+---
+
+core_interfaces:
+  # First, an IP-pool for the underlay p2p links is defined
+  p2p_links_ip_pools:
+    - name: core_pool
+      ipv4_pool: 100.64.48.0/24
+  p2p_links_profiles:
+    - name: core_profile
+      # speed: 100gfull
+      # On vEOS-lab, MTU values larger than 1500 can cause issues, in an actual production network this is normally a larger value
+      mtu: 1500
+      isis_metric: 50
+      ip_pool: core_pool
+      isis_circuit_type: level-2
+      isis_authentication_mode: md5
+      isis_authentication_key: $1c$sTNAlR6rKSw=
+  p2p_links:
+    # PE1 links
+    - nodes: [ A-PE1, A-P1 ]
+      id: 1
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ A-PE1, A-P2 ]
+      id: 2
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+    # PE2 links
+    - nodes: [ A-PE2, A-P2 ]
+      id: 3
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ A-PE2, A-P1 ]
+      id: 4
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+    # P1 links
+    # The rest of the P1/P2 links are defined under PE1/PE2/RR1/RR2 links
+    - nodes: [ A-P1, A-P2 ]
+      id: 5
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: core_profile
+    # RR1 links
+    - nodes: [ RR1, A-P1 ]
+      id: 6
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: core_profile
+    - nodes: [ RR1, B-P1 ]
+      id: 7
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+    - nodes: [ RR1, RR2 ]
+      id: 8
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: core_profile
+    # RR2 links
+    - nodes: [ RR2, A-P2 ]
+      id: 9
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: core_profile
+    - nodes: [ RR2, B-P2 ]
+      id: 10
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+    # B-PE1 links
+    - nodes: [ B-PE1, B-P1 ]
+      id: 11
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ B-PE1, B-P2 ]
+      id: 12
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile
+    # B-PE2 links
+    - nodes: [ B-PE2, B-P2 ]
+      id: 13
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ B-PE2, B-P1 ]
+      id: 14
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: core_profile

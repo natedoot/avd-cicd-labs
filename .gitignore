@@ -4,3 +4,5 @@
 **/intended/**
 # ignore local python env
 .python-version
+# ignore logs
+**.log**

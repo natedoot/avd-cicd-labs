@@ -1,0 +1,51 @@
+---
+
+bgp_as: 65001
+
+p:
+  # Definition of default values that will be configured to all nodes defined in this group
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    platform: vEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for Router ID
+    loopback_ipv4_pool: 10.255.0.0/27
+    # ISIS NET system id prefix
+    isis_system_id_prefix: '0000.0000'
+  # Definition of nodes contained in this group.
+  # Specific configuration of device must take place under the node definition. Each node inherites all values defined under 'defaults'
+  nodes:
+    # Name of the node to be defined (must be consistent with definition in inventory)
+    - name: A-P1
+      # Device ID definition. An integer number used for internal calculations (ie. IPv4 address of the loopback_ipv4_pool among others)
+      id: 1
+      # Management IP to be assigned to the management interface
+      mgmt_ip: 192.168.0.107/24
+    - name: A-P2
+      id: 2
+      mgmt_ip: 192.168.0.108/24
+
+pe:
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    platform: vEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
+    loopback_ipv4_pool: 10.255.1.0/27
+    virtual_router_mac_address: 00:1c:73:00:dc:00
+    mpls_route_reflectors: [ rr1, rr2 ]
+    # ISIS NET system id prefix
+    isis_system_id_prefix: '0000.0001'
+    spanning_tree_mode: none
+
+  # If two nodes (and only two) are in the same node_group, they will automatically form an MLAG pair
+  node_groups:
+    # Definition of a node group that will include two devices in MLAG.
+    # Definitions under the group will be inherited by both nodes in the group
+    - group: A-PE1-2
+      nodes:
+        # Definition of hostnames under the node_group
+        - name: A-PE1
+          id: 1
+          mgmt_ip: 192.168.0.101/24
+        - name: A-PE2
+          id: 2
+          mgmt_ip: 192.168.0.102/24

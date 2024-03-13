@@ -1,0 +1,21 @@
+---
+
+type: rr
+
+rr:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.255.2.0/27
+    mpls_route_reflectors: [ RR1, RR2 ] 
+    isis_system_id_prefix: '0000.0002'
+    spanning_tree_mode: none
+  
+  node_groups:
+    - group: RR
+      nodes:
+        - name: RR1
+          id: 1
+          mgmt_ip: 192.168.0.9/24 
+        - name: RR2
+          id: 2
+          mgmt_ip: 192.168.0.10/24

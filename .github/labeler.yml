@@ -1,0 +1,10 @@
+"datacenter: domain_a":
+  - tech-library/datacenter/group_vars/DOMAIN_A*
+"datacenter: domain_b":
+  - tech-library/datacenter/group_vars/DOMAIN_B*
+"datacenter: domain_c":
+  - tech-library/datacenter/group_vars/DOMAIN_C*
+"datacenter: backbone":
+  - tech-library/datacenter/group_vars/BACKBONE.yml
+"datacenter: network_services":
+  - tech-library/datacenter/group_vars/NETWORK_SERVICES.yml
