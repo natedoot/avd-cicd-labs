@@ -6,7 +6,7 @@ underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp
 
 underlay_multicast: true
-# evpn_multicast: true
+evpn_multicast: true
 
 fabric_ip_addressing:
   mlag:
