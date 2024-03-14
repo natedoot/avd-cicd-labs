@@ -11,6 +11,7 @@ isis_area_id: 49.1111
 evpn_short_esi_prefix: '0000:000b:'
 
 underlay_multicast: true
+evpn_multicast: true
 
 p2p_uplinks_mtu: 1500
 
