@@ -1,7 +1,7 @@
 ---
 
 dc_name: backbone
-pod_name: pod-bb
+pod_name: pod-backbone
 
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ibgp
