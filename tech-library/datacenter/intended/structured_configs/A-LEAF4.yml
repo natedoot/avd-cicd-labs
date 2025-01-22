@@ -111,7 +111,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 50002:50002
-    evpn_multicast: true
     router_id: 1.1.1.4
     redistribute:
       connected:
@@ -132,7 +131,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 50001:50001
-    evpn_multicast: true
     router_id: 1.1.1.4
     redistribute:
       connected:
@@ -169,17 +167,6 @@ router_bgp:
     - learned
 service_routing_protocols_model: multi-agent
 ip_routing: true
-router_multicast:
-  ipv4:
-    routing: true
-    software_forwarding: sfe
-  vrfs:
-  - name: Dev
-    ipv4:
-      routing: true
-  - name: Prod
-    ipv4:
-      routing: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.0.5:9910
@@ -283,9 +270,6 @@ vlan_interfaces:
   shutdown: false
   mtu: 9214
   ip_address: 192.0.0.1/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Vlan4094
   description: MLAG
   shutdown: false
@@ -298,10 +282,6 @@ vlan_interfaces:
   shutdown: false
   mtu: 9014
   ip_address_virtual: 10.50.50.1/24
-  pim:
-    ipv4:
-      sparse_mode: true
-      local_interface: Loopback102
   vrf: Dev
 - name: Vlan3002
   tenant: Dev
@@ -317,10 +297,6 @@ vlan_interfaces:
   shutdown: false
   mtu: 9014
   ip_address_virtual: 10.10.10.1/24
-  pim:
-    ipv4:
-      sparse_mode: true
-      local_interface: Loopback101
   vrf: Prod
 - name: Vlan30
   tenant: Prod
@@ -328,10 +304,6 @@ vlan_interfaces:
   shutdown: false
   mtu: 9014
   ip_address_virtual: 10.30.30.1/24
-  pim:
-    ipv4:
-      sparse_mode: true
-      local_interface: Loopback101
   vrf: Prod
 - name: Vlan3001
   tenant: Prod
@@ -352,7 +324,7 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel8
-  description: HostD
+  description: A4
   shutdown: false
   switchport:
     enabled: true
@@ -389,9 +361,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.25/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet2
   peer: A-SPINE2
   peer_interface: Ethernet4
@@ -402,9 +371,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.27/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet3
   peer: A-SPINE3
   peer_interface: Ethernet4
@@ -415,9 +381,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.29/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet4
   peer: A-SPINE4
   peer_interface: Ethernet4
@@ -428,25 +391,22 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.31/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet8
-  peer: HostD
+  peer: A4
   peer_interface: Ethernet2
   peer_type: server
   port_profile: DEFAULT
-  description: SERVER_HostD_Ethernet2
+  description: SERVER_A4_Ethernet2
   shutdown: false
   channel_group:
     id: 8
     mode: active
 - name: Ethernet7
-  peer: HostE
+  peer: A5
   peer_interface: Ethernet1
   peer_type: server
   port_profile: DEFAULT
-  description: HostE
+  description: A5
   shutdown: false
   switchport:
     enabled: true
@@ -525,8 +485,7 @@ vxlan_interface:
     description: A-LEAF4_VTEP
     vxlan:
       udp_port: 4789
-      source_interface: Loopback0
-      mlag_source_interface: Loopback1
+      source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 50
@@ -538,10 +497,8 @@ vxlan_interface:
       vrfs:
       - name: Dev
         vni: 50002
-        multicast_group: 232.2.2.1
       - name: Prod
         vni: 50001
-        multicast_group: 232.1.1.1
 virtual_source_nat_vrfs:
 - name: Dev
   ip_address: 10.102.101.4

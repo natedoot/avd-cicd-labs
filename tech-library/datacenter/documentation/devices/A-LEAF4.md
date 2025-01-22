@@ -48,8 +48,6 @@
   - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
-  - [Router Multicast](#router-multicast)
-  - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [Prefix-lists](#prefix-lists)
   - [Route-maps](#route-maps)
@@ -354,8 +352,8 @@ mac address-table aging-time 1800
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_A-LEAF3_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF3_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
-| Ethernet7 | HostE | access | 30 | - | - | - |
-| Ethernet8 | SERVER_HostD_Ethernet2 | *access | *10 | *- | *- | 8 |
+| Ethernet7 | A5 | access | 30 | - | - | - |
+| Ethernet8 | SERVER_A4_Ethernet2 | *access | *10 | *- | *- | 8 |
 
 *Inherited from Port-Channel Interface
 
@@ -378,7 +376,6 @@ interface Ethernet1
    mtu 9214
    no switchport
    ip address 192.168.1.25/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet2
    description P2P_A-SPINE2_Ethernet4
@@ -386,7 +383,6 @@ interface Ethernet2
    mtu 9214
    no switchport
    ip address 192.168.1.27/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet3
    description P2P_A-SPINE3_Ethernet4
@@ -394,7 +390,6 @@ interface Ethernet3
    mtu 9214
    no switchport
    ip address 192.168.1.29/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet4
    description P2P_A-SPINE4_Ethernet4
@@ -402,7 +397,6 @@ interface Ethernet4
    mtu 9214
    no switchport
    ip address 192.168.1.31/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet5
    description MLAG_A-LEAF3_Ethernet5
@@ -415,7 +409,7 @@ interface Ethernet6
    channel-group 1000 mode active
 !
 interface Ethernet7
-   description HostE
+   description A5
    no shutdown
    switchport access vlan 30
    switchport mode access
@@ -423,7 +417,7 @@ interface Ethernet7
    spanning-tree portfast
 !
 interface Ethernet8
-   description SERVER_HostD_Ethernet2
+   description SERVER_A4_Ethernet2
    no shutdown
    channel-group 8 mode active
 ```
@@ -436,7 +430,7 @@ interface Ethernet8
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel8 | HostD | access | 10 | - | - | - | - | 8 | - |
+| Port-Channel8 | A4 | access | 10 | - | - | - | - | 8 | - |
 | Port-Channel1000 | MLAG_A-LEAF3_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -444,7 +438,7 @@ interface Ethernet8
 ```eos
 !
 interface Port-Channel8
-   description HostD
+   description A4
    no shutdown
    switchport access vlan 10
    switchport mode access
@@ -544,8 +538,6 @@ interface Vlan10
    no shutdown
    mtu 9014
    vrf Prod
-   pim ipv4 sparse-mode
-   pim ipv4 local-interface Loopback101
    ip address virtual 10.10.10.1/24
 !
 interface Vlan30
@@ -553,8 +545,6 @@ interface Vlan30
    no shutdown
    mtu 9014
    vrf Prod
-   pim ipv4 sparse-mode
-   pim ipv4 local-interface Loopback101
    ip address virtual 10.30.30.1/24
 !
 interface Vlan50
@@ -562,8 +552,6 @@ interface Vlan50
    no shutdown
    mtu 9014
    vrf Dev
-   pim ipv4 sparse-mode
-   pim ipv4 local-interface Loopback102
    ip address virtual 10.50.50.1/24
 !
 interface Vlan3001
@@ -585,7 +573,6 @@ interface Vlan4093
    no shutdown
    mtu 9214
    ip address 192.0.0.1/31
-   pim ipv4 sparse-mode
 !
 interface Vlan4094
    description MLAG
@@ -601,8 +588,7 @@ interface Vlan4094
 
 | Setting | Value |
 | ------- | ----- |
-| Source Interface | Loopback0 |
-| MLAG Source Interface | Loopback1 |
+| Source Interface | Loopback1 |
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
@@ -618,8 +604,8 @@ interface Vlan4094
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| Dev | 50002 | 232.2.2.1 |
-| Prod | 50001 | 232.1.1.1 |
+| Dev | 50002 | - |
+| Prod | 50001 | - |
 
 #### VXLAN Interface Device Configuration
 
@@ -627,7 +613,7 @@ interface Vlan4094
 !
 interface Vxlan1
    description A-LEAF4_VTEP
-   vxlan source-interface Loopback0
+   vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
    vxlan vlan 10 vni 10010
@@ -635,9 +621,6 @@ interface Vxlan1
    vxlan vlan 50 vni 10050
    vxlan vrf Dev vni 50002
    vxlan vrf Prod vni 50001
-   vxlan mlag source-interface Loopback1
-   vxlan vrf Dev multicast group 232.2.2.1
-   vxlan vrf Prod multicast group 232.1.1.1
 ```
 
 ## Routing
@@ -790,10 +773,10 @@ ASN Notation: asplain
 
 #### Router BGP VRFs
 
-| VRF | Route-Distinguisher | Redistribute | EVPN Multicast |
-| --- | ------------------- | ------------ | -------------- |
-| Dev | 1.1.1.4:50002 | connected | IPv4: True<br>Transit: False |
-| Prod | 1.1.1.4:50001 | connected | IPv4: True<br>Transit: False |
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| Dev | 1.1.1.4:50002 | connected |
+| Prod | 1.1.1.4:50001 | connected |
 
 #### Router BGP Device Configuration
 
@@ -882,7 +865,6 @@ router bgp 65134
       neighbor 192.0.0.0 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 192.0.0.0 description A-LEAF3_Vlan3002
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      evpn multicast
    !
    vrf Prod
       rd 1.1.1.4:50001
@@ -892,7 +874,6 @@ router bgp 65134
       neighbor 192.0.0.0 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 192.0.0.0 description A-LEAF3_Vlan3001
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      evpn multicast
 ```
 
 ## BFD
@@ -927,53 +908,6 @@ router bfd
 
 ```eos
 ```
-
-### Router Multicast
-
-#### IP Router Multicast Summary
-
-- Routing for IPv4 multicast is enabled.
-- Software forwarding by the Software Forwarding Engine (SFE)
-
-#### IP Router Multicast VRFs
-
-| VRF Name | Multicast Routing |
-| -------- | ----------------- |
-| Dev | enabled |
-| Prod | enabled |
-
-#### Router Multicast Device Configuration
-
-```eos
-!
-router multicast
-   ipv4
-      routing
-      software-forwarding sfe
-   !
-   vrf Dev
-      ipv4
-         routing
-   !
-   vrf Prod
-      ipv4
-         routing
-```
-
-### PIM Sparse Mode
-
-#### PIM Sparse Mode Enabled Interfaces
-
-| Interface Name | VRF Name | IP Version | Border Router | DR Priority | Local Interface |
-| -------------- | -------- | ---------- | ------------- | ----------- | --------------- |
-| Ethernet1 | - | IPv4 | - | - | - |
-| Ethernet2 | - | IPv4 | - | - | - |
-| Ethernet3 | - | IPv4 | - | - | - |
-| Ethernet4 | - | IPv4 | - | - | - |
-| Vlan10 | Prod | IPv4 | - | - | Loopback101 |
-| Vlan30 | Prod | IPv4 | - | - | Loopback101 |
-| Vlan50 | Dev | IPv4 | - | - | Loopback102 |
-| Vlan4093 | - | IPv4 | - | - | - |
 
 ## Filters
 

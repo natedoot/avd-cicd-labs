@@ -44,9 +44,9 @@ jobs:
       - name: Parse Validation Report
         run: |
           cd tech-library/datacenter/reports
-          if grep -q ",FAIL," FABRIC-state.csv; then
+          if grep -q ",FAILs," FABRIC-state.csv; then
             echo "Validation failures detected in FABRIC-state.csv:"
-            grep ",FAIL," FABRIC-state.csv
+            grep ",FAILs," FABRIC-state.csv
             exit 1
           else
             echo "No validation failures detected."
@@ -77,3 +77,23 @@ jobs:
           ansible-playbook playbooks/deploy.yml -i inventory.yml \
             -e cv_token=${{ secrets.CV_SVC_TOKEN }} \
             -e cv_run_change_control=True
+  merge:
+    needs: validate
+    runs-on: self-hosted
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge Branch into Main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout main
+          git merge --no-ff ${{ github.event.inputs.environment }}
+          git push origin main
