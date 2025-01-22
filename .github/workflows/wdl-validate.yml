@@ -25,7 +25,7 @@ jobs:
           pip install "pyavd[ansible]"
           ansible-galaxy collection install arista.avd
 
-      # Step 4: Run ANTA validation script
+      # Step 4: Run AVD Validate State
       - name: Run AVD Validate State
         env:
           ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
@@ -37,7 +37,19 @@ jobs:
             -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
             -e only_failed_tests=True
 
-      # Step 5: Create GitHub issue on validation failure
+      # Step 5: Parse Validation Report and Detect Failures
+      - name: Parse Validation Report
+        run: |
+          cd tech-library/datacenter/reports
+          if grep -q ",FAIL," FABRIC-state.csv; then
+            echo "Validation failures detected in FABRIC-state.csv:"
+            grep ",FAIL," FABRIC-state.csv
+            exit 1
+          else
+            echo "No validation failures detected."
+          fi
+
+      # Step 6: Create GitHub issue on validation failure
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -46,7 +58,7 @@ jobs:
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
 
-      # Step 6: Build and deploy configs if validation fails
+      # Step 7: Build and deploy configs if validation fails
       - name: Build and Deploy Configs
         if: failure()
         run: |
