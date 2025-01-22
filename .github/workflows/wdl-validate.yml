@@ -32,10 +32,9 @@ jobs:
           ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
         run: |
           cd tech-library/datacenter
-          ansible-playbook playbooks/validate.yml \
+          ansible-playbook playbooks/validate.yml -i inventory.yml \
             -e ansible_user=${{ secrets.ANSIBLE_USERNAME }} \
-            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
-            -e inventory_file=act-inventory.yml
+            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }}
 
       # Step 5: Create GitHub issue on validation failure
       - name: Create GitHub Issue on Validation Failure
