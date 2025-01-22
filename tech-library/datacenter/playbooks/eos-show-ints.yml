@@ -1,0 +1,46 @@
+---
+
+- name: Deploy server configs
+  hosts: A-LEAF3
+  connection: local
+  gather_facts: false
+
+  vars:
+    ansible_user: cvpadmin
+    ansible_password: arista123
+    ansible_network_os: arista.eos.eos
+    ansible_ssh_pass: arista123
+    ansible_connection: network_cli
+    ansible_become: true
+    ansible_become_method: enable
+
+  tasks:
+    - name: Gather configuration from EOS device
+      arista.eos.eos_command:
+        commands: show running-config | json
+      register: result
+
+    - name: gather PO config info
+      tags: [ po_only ]
+      arista.eos.eos_lag_interfaces:
+        state: gathered
+      register: po_result
+    - name: save po result
+      tags: [ po_only ]
+      copy:
+        content: "{{ po_result.gathered | to_nice_yaml(indent=2) }}"
+        dest: playbooks/data/po_result.yml
+      
+    - name: Save gathered configuration to a temporary JSON file
+      copy:
+        content: "{{ result }}"
+        dest: /tmp/config_result.json
+
+    - name: Convert JSON config to YAML using Python script
+      command: python scripts/eos-to-yaml.py /tmp/config_result.json /tmp/output_config.yml
+
+    - name: Fetch the YAML output file
+      fetch:
+        src: /tmp/output_config.yml
+        dest: ./output_config.yml
+        flat: yes

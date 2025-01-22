@@ -1,0 +1,293 @@
+hostname: B-SPINE2
+is_deployed: true
+router_bgp:
+  as: '65200'
+  router_id: 1.1.2.202
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  bgp_cluster_id: 1.1.2.202
+  peer_groups:
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    remote_as: '65200'
+    route_reflector_client: true
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  neighbors:
+  - ip_address: 1.1.2.1
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF1
+    description: B-LEAF1_Loopback0
+  - ip_address: 1.1.2.2
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF2
+    description: B-LEAF2_Loopback0
+  - ip_address: 1.1.2.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF3
+    description: B-LEAF3_Loopback0
+  - ip_address: 1.1.2.4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF4
+    description: B-LEAF4_Loopback0
+  - ip_address: 1.1.2.5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF5
+    description: B-LEAF5_Loopback0
+  - ip_address: 1.1.2.6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF6
+    description: B-LEAF6_Loopback0
+  - ip_address: 1.1.2.7
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF7
+    description: B-LEAF7_Loopback0
+  - ip_address: 1.1.2.8
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-LEAF8
+    description: B-LEAF8_Loopback0
+service_routing_protocols_model: multi-agent
+ip_routing: true
+router_multicast:
+  ipv4:
+    routing: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+ip_name_servers:
+- ip_address: 10.255.0.2
+  vrf: default
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
+vrfs:
+- name: default
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.16/24
+  gateway: null
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+eos_cli: 'agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=''true''
+
+  '
+ethernet_interfaces:
+- name: Ethernet1
+  peer: B-LEAF1
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF1_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.2/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet2
+  peer: B-LEAF2
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF2_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.10/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet3
+  peer: B-LEAF3
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF3_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.18/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet4
+  peer: B-LEAF4
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF4_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.26/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet5
+  peer: B-LEAF5
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF5_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.34/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet6
+  peer: B-LEAF6
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF6_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.42/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet7
+  peer: B-LEAF7
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF7_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.50/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+- name: Ethernet8
+  peer: B-LEAF8
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  description: P2P_B-LEAF8_Ethernet2
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.58/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.1.2.202/32
+  isis_enable: EVPN_UNDERLAY
+  isis_passive: true
+router_isis:
+  instance: EVPN_UNDERLAY
+  log_adjacency_changes: true
+  net: 49.1111.0010.0100.2202.00
+  router_id: 1.1.2.202
+  is_type: level-2
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+metadata:
+  platform: vEOS-lab
+  cv_tags:
+    device_tags:
+    - name: topology_hint_datacenter
+      value: domain-b
+    - name: topology_hint_fabric
+      value: FABRIC
+    - name: topology_hint_pod
+      value: pod-b
+    - name: topology_hint_type
+      value: spine

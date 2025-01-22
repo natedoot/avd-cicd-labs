@@ -1,0 +1,57 @@
+interfaces:
+{% for lag_interfaces in result %}
+{%  for members in lag_interfaces %}
+{%      for member in members %}
+
+{%  if interface.name.startswith('Port-Channel') %}
+  - name: "{{ interface.name }}"
+    description: "{{ interface.description }}"
+    shutdown: {{ not interface.enabled  }}
+{%      if interface.mtu is defined %}
+    mtu: {{ interface.mtu }}
+{%      endif %}
+{%      if interface.mode is defined %}
+    mode: "{{ interface.mode }}"
+{%      endif %}
+{%      if interface.vlans is defined %}
+    vlans: "{{ interface.vlans }}"
+{%      endif %}
+{%      if interface.native_vlan is defined %}
+    native_vlan: {{ interface.native_vlan }}
+{%      endif %}
+{%      if interface.l2_mtu is defined %}
+    l2_mtu: {{ interface.l2_mtu }}
+{%      endif %}
+{%      if interface.l2_mru is defined %}
+    l2_mru: {{ interface.l2_mru }}
+{%      endif %}
+{%      if interface.mlag is defined %}
+    mlag: {{ interface.mlag }}
+{%      endif %}
+{%      if interface.lacp_fallback_timeout is defined %}
+    lacp_fallback_timeout: {{ interface.lacp_fallback_timeout }}
+{%      endif %}
+{%      if interface.lacp_fallback_mode is defined %}
+    lacp_fallback_mode: "{{ interface.lacp_fallback_mode }}"
+{%      endif %}
+    type: "port-channel"
+{%  endif %}
+{%  elif interface.name.startswith('Ethernet') %}
+  - name: "{{ interface.name }}"
+    description: "{{ interface.description }}"
+    shutdown: {{ not interface.enabled  }}
+{%      if interface.mtu is defined %}
+    mtu: {{ interface.mtu }}
+{%      endif %}
+{%      if interface.mode is defined %}
+    mode: "{{ interface.mode }}"
+{%      endif %}
+{%      if interface.vlans is defined %}
+    vlans: "{{ interface.vlans }}"
+{%      endif %}
+{%      if interface.native_vlan is defined %}
+    native_vlan: {{ interface.native_vlan }}
+{%      endif %}
+    type: "ethernet"
+
+{% endfor %}

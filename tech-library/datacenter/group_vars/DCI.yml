@@ -3,17 +3,17 @@
 l3_edge:
   # Define a new link profile which will match the IP pool, the used ASNs and include the defined interface into underlay routing
   p2p_links_profiles:
-    DCI_A_profile:
+    - name: DCI_A_profile
       as: 
       - 65500
       - 65178 
       include_in_underlay_protocol: true
-    DCI_B_profile:
+    - name: DCI_B_profile
       as:
       - 65500
       - 65200
       include_in_underlay_protocol: true
-    DCI_C_profile:
+    - name: DCI_C_profile
       as:
       - 65500
       - 65378

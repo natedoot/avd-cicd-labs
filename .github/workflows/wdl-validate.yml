@@ -1,0 +1,60 @@
+name: Validate Network with ANTA
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "The branch to validate (for inventory selection)"
+        required: true
+        default: "main"
+
+jobs:
+  validate:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Ansible and AVD roles
+        run: |
+          pip install "pyavd[ansible]"
+          ansible-galaxy collection install arista.avd
+
+      # Step 4: Run ANTA validation script
+      - name: Run ANTA NRFU Validation
+        env:
+          ANTA_USERNAME: ${{ secrets.ANTA_USERNAME }}
+          ANTA_PASSWORD: ${{ secrets.ANTA_PASSWORD }}
+        run: |
+          python act/run_anta_validation.py \
+            --inventory ./inventory/${{ github.event.inputs.environment }}.json
+
+      # Step 5: Create GitHub issue on validation failure
+      - name: Create GitHub Issue on Validation Failure
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
+                          --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
+
+      # Step 6: Build and deploy configs if validation fails
+      - name: Build and Deploy Configs
+        if: failure()
+        env:
+          ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
+          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+        run: |
+          # Checkout the main branch
+          git checkout main
+          cd tech-library/datacenter
+          python build.py
+          # Build and deploy configs with cv_deploy and cv_run_change_control=True
+          ansible-playbook playbooks/deploy.yml \
+            -e cv_token=${{ secrets.CV_SVC_TOKEN }} \
+            -e cv_run_change_control=True
