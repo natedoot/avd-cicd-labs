@@ -38,4 +38,3 @@
             name: build-fabric-artifact
             path: tech-library/datacenter/intended/**
             retention-days: 1
-  
