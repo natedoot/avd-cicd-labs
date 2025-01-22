@@ -26,13 +26,16 @@ jobs:
           ansible-galaxy collection install arista.avd
 
       # Step 4: Run ANTA validation script
-      - name: Run ANTA NRFU Validation
+      - name: Run AVD Validate State
         env:
-          ANTA_USERNAME: ${{ secrets.ANTA_USERNAME }}
-          ANTA_PASSWORD: ${{ secrets.ANTA_PASSWORD }}
+          ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
+          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
         run: |
-          python act/run_anta_validation.py \
-            --inventory ./inventory/${{ github.event.inputs.environment }}.json
+          cd tech-library/datacenter
+          ansible-playbook playbooks/validate_state.yml \
+            -e ansible_user=${{ secrets.ANSIBLE_USERNAME }} \
+            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
+            -e inventory_file=act-inventory.yml
 
       # Step 5: Create GitHub issue on validation failure
       - name: Create GitHub Issue on Validation Failure
@@ -46,9 +49,6 @@ jobs:
       # Step 6: Build and deploy configs if validation fails
       - name: Build and Deploy Configs
         if: failure()
-        env:
-          ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
-          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
         run: |
           # Checkout the main branch
           git checkout main
