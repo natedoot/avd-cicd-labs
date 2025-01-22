@@ -49,7 +49,13 @@ jobs:
             echo "No validation failures detected."
           fi
 
-      # Step 6: Create GitHub issue on validation failure
+      # Step 6: Install GitHub CLI
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      # Step 7: Create GitHub Issue on Validation Failure
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -58,15 +64,19 @@ jobs:
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
 
-      # Step 7: Build and deploy configs if validation fails
+      # Step 8: Fetch and Checkout Main Branch for Config Deployment
+      - name: Fetch and Checkout Main Branch
+        if: failure()
+        run: |
+          git fetch origin main
+          git checkout main
+
+      # Step 9: Build and Deploy Configs
       - name: Build and Deploy Configs
         if: failure()
         run: |
-          # Checkout the main branch
-          git checkout main
           cd tech-library/datacenter
           python build.py
-          # Build and deploy configs with cv_deploy and cv_run_change_control=True
           ansible-playbook playbooks/deploy.yml \
             -e cv_token=${{ secrets.CV_SVC_TOKEN }} \
             -e cv_run_change_control=True
