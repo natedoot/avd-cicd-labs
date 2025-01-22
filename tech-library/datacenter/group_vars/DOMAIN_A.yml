@@ -5,12 +5,16 @@ pod_name: pod-a
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp
 
-underlay_multicast: true
-evpn_multicast: true
+# underlay_multicast: true
+# evpn_multicast: true
 
 fabric_ip_addressing:
   mlag:
     algorithm: same_subnet
+
+aaa_authorization:
+  exec:
+    default: local
 
 bgp_peer_groups:
   evpn_overlay_core:
@@ -25,8 +29,8 @@ spine:
     platform: vEOS-lab 
     loopback_ipv4_pool: 1.1.1.0/24
     bgp_as: 65100
-    raw_eos_cli: |
-      agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
+    # raw_eos_cli: |
+    #   agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
   nodes: 
     - name: A-SPINE1
       id: 201 

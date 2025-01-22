@@ -8,6 +8,9 @@ on:
         required: true
         default: "main"
 
+permissions:
+  issues: write  # Grant permissions to create GitHub issues
+
 jobs:
   validate:
     runs-on: self-hosted
@@ -25,19 +28,31 @@ jobs:
           pip install "pyavd[ansible]"
           ansible-galaxy collection install arista.avd
 
-      # Step 4: Run ANTA validation script
+      # Step 4: Run AVD Validate State
       - name: Run AVD Validate State
         env:
           ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
           ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
         run: |
           cd tech-library/datacenter
-          ansible-playbook playbooks/validate_state.yml \
+          ansible-playbook playbooks/validate.yml -i inventory.yml \
             -e ansible_user=${{ secrets.ANSIBLE_USERNAME }} \
             -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
-            -e inventory_file=act-inventory.yml
+            -e only_failed_tests=True
 
-      # Step 5: Create GitHub issue on validation failure
+      # Step 5: Parse Validation Report and Detect Failures
+      - name: Parse Validation Report
+        run: |
+          cd tech-library/datacenter/reports
+          if grep -q ",FAILs," FABRIC-state.csv; then
+            echo "Validation failures detected in FABRIC-state.csv:"
+            grep ",FAILs," FABRIC-state.csv
+            exit 1
+          else
+            echo "No validation failures detected."
+          fi
+
+      # Step 7: Create GitHub Issue on Validation Failure
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -46,15 +61,40 @@ jobs:
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
 
-      # Step 6: Build and deploy configs if validation fails
+      # Step 8: Fetch and Checkout Main Branch for Config Deployment
+      - name: Fetch and Checkout Main Branch
+        if: failure()
+        run: |
+          git fetch origin main
+          git checkout main
+
+      # Step 9: Build and Deploy Configs
       - name: Build and Deploy Configs
         if: failure()
         run: |
-          # Checkout the main branch
-          git checkout main
           cd tech-library/datacenter
           python build.py
-          # Build and deploy configs with cv_deploy and cv_run_change_control=True
-          ansible-playbook playbooks/deploy.yml \
+          ansible-playbook playbooks/deploy.yml -i inventory.yml \
             -e cv_token=${{ secrets.CV_SVC_TOKEN }} \
             -e cv_run_change_control=True
+  merge:
+    needs: validate
+    runs-on: self-hosted
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge Branch into Main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout main
+          git merge --no-ff --allow-unrelated-histories ${{ github.event.inputs.environment }}
+          git push origin main
+

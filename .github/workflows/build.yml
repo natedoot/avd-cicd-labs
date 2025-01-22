@@ -7,8 +7,8 @@
       branches-ignore:
         - main
       paths:
-        - 'tech-library/datacenter/**/host_vars/**'
-        - 'tech-library/datacenter/**/group_vars/**'
+        - 'tech-library/datacenter/host_vars/**'
+        - 'tech-library/datacenter/group_vars/**'
   jobs:
     build-configs:
       runs-on: self-hosted
@@ -25,12 +25,13 @@
           run: |
             pip install "pyavd[ansible]"
             ansible-galaxy collection install arista.avd
+            pip install -r requirements.txt
         
         - name: Build and Deploy to CV
           run: |
             cd tech-library/datacenter/
             python build.py
-            ansible-playbook playbooks/deploy.yml
+            ansible-playbook playbooks/deploy.yml -i inventory.yml
 
         - name: 'Upload Artifact'
           uses: actions/upload-artifact@v4

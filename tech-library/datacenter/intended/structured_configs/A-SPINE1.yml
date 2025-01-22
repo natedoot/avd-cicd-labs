@@ -126,9 +126,6 @@ router_bgp:
       activate: true
 service_routing_protocols_model: multi-agent
 ip_routing: true
-router_multicast:
-  ipv4:
-    routing: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.0.5:9910
@@ -195,9 +192,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.0/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet2
   peer: A-LEAF2
   peer_interface: Ethernet1
@@ -208,9 +202,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.8/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet3
   peer: A-LEAF3
   peer_interface: Ethernet1
@@ -221,9 +212,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.16/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet4
   peer: A-LEAF4
   peer_interface: Ethernet1
@@ -234,9 +222,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.24/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet5
   peer: A-LEAF5
   peer_interface: Ethernet1
@@ -247,9 +232,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.32/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet6
   peer: A-LEAF6
   peer_interface: Ethernet1
@@ -260,9 +242,6 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 192.168.1.40/31
-  pim:
-    ipv4:
-      sparse_mode: true
 - name: Ethernet7
   peer: A-LEAF7
   peer_interface: Ethernet1

@@ -48,8 +48,6 @@
   - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
-  - [Router Multicast](#router-multicast)
-  - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [Prefix-lists](#prefix-lists)
   - [Route-maps](#route-maps)
@@ -341,7 +339,7 @@ mac address-table aging-time 1800
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_A-LEAF6_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF6_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
-| Ethernet7 | SERVER_HostF_Ethernet1 | *access | *70 | *- | *- | 7 |
+| Ethernet7 | SERVER_A6_Ethernet1 | *access | *70 | *- | *- | 7 |
 
 *Inherited from Port-Channel Interface
 
@@ -364,7 +362,6 @@ interface Ethernet1
    mtu 9214
    no switchport
    ip address 192.168.1.33/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet2
    description P2P_A-SPINE2_Ethernet5
@@ -372,7 +369,6 @@ interface Ethernet2
    mtu 9214
    no switchport
    ip address 192.168.1.35/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet3
    description P2P_A-SPINE3_Ethernet5
@@ -380,7 +376,6 @@ interface Ethernet3
    mtu 9214
    no switchport
    ip address 192.168.1.37/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet4
    description P2P_A-SPINE4_Ethernet5
@@ -388,7 +383,6 @@ interface Ethernet4
    mtu 9214
    no switchport
    ip address 192.168.1.39/31
-   pim ipv4 sparse-mode
 !
 interface Ethernet5
    description MLAG_A-LEAF6_Ethernet5
@@ -401,7 +395,7 @@ interface Ethernet6
    channel-group 1000 mode active
 !
 interface Ethernet7
-   description SERVER_HostF_Ethernet1
+   description SERVER_A6_Ethernet1
    no shutdown
    channel-group 7 mode active
 ```
@@ -414,7 +408,7 @@ interface Ethernet7
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | HostF | access | 70 | - | - | - | - | 7 | - |
+| Port-Channel7 | A6 | access | 70 | - | - | - | - | 7 | - |
 | Port-Channel1000 | MLAG_A-LEAF6_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -422,7 +416,7 @@ interface Ethernet7
 ```eos
 !
 interface Port-Channel7
-   description HostF
+   description A6
    no shutdown
    switchport access vlan 70
    switchport mode access
@@ -508,8 +502,6 @@ interface Vlan70
    no shutdown
    mtu 9014
    vrf Dev
-   pim ipv4 sparse-mode
-   pim ipv4 local-interface Loopback102
    ip address virtual 10.70.70.1/24
 !
 interface Vlan3002
@@ -524,7 +516,6 @@ interface Vlan4093
    no shutdown
    mtu 9214
    ip address 192.0.0.0/31
-   pim ipv4 sparse-mode
 !
 interface Vlan4094
    description MLAG
@@ -540,8 +531,7 @@ interface Vlan4094
 
 | Setting | Value |
 | ------- | ----- |
-| Source Interface | Loopback0 |
-| MLAG Source Interface | Loopback1 |
+| Source Interface | Loopback1 |
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
@@ -555,7 +545,7 @@ interface Vlan4094
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| Dev | 50002 | 232.2.2.1 |
+| Dev | 50002 | - |
 
 #### VXLAN Interface Device Configuration
 
@@ -563,13 +553,11 @@ interface Vlan4094
 !
 interface Vxlan1
    description A-LEAF5_VTEP
-   vxlan source-interface Loopback0
+   vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
    vxlan vlan 70 vni 10070
    vxlan vrf Dev vni 50002
-   vxlan mlag source-interface Loopback1
-   vxlan vrf Dev multicast group 232.2.2.1
 ```
 
 ## Routing
@@ -716,9 +704,9 @@ ASN Notation: asplain
 
 #### Router BGP VRFs
 
-| VRF | Route-Distinguisher | Redistribute | EVPN Multicast |
-| --- | ------------------- | ------------ | -------------- |
-| Dev | 1.1.1.5:50002 | connected | IPv4: True<br>Transit: False |
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| Dev | 1.1.1.5:50002 | connected |
 
 #### Router BGP Device Configuration
 
@@ -797,7 +785,6 @@ router bgp 65156
       neighbor 192.0.0.1 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 192.0.0.1 description A-LEAF6_Vlan3002
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      evpn multicast
 ```
 
 ## BFD
@@ -832,46 +819,6 @@ router bfd
 
 ```eos
 ```
-
-### Router Multicast
-
-#### IP Router Multicast Summary
-
-- Routing for IPv4 multicast is enabled.
-- Software forwarding by the Software Forwarding Engine (SFE)
-
-#### IP Router Multicast VRFs
-
-| VRF Name | Multicast Routing |
-| -------- | ----------------- |
-| Dev | enabled |
-
-#### Router Multicast Device Configuration
-
-```eos
-!
-router multicast
-   ipv4
-      routing
-      software-forwarding sfe
-   !
-   vrf Dev
-      ipv4
-         routing
-```
-
-### PIM Sparse Mode
-
-#### PIM Sparse Mode Enabled Interfaces
-
-| Interface Name | VRF Name | IP Version | Border Router | DR Priority | Local Interface |
-| -------------- | -------- | ---------- | ------------- | ----------- | --------------- |
-| Ethernet1 | - | IPv4 | - | - | - |
-| Ethernet2 | - | IPv4 | - | - | - |
-| Ethernet3 | - | IPv4 | - | - | - |
-| Ethernet4 | - | IPv4 | - | - | - |
-| Vlan70 | Dev | IPv4 | - | - | Loopback102 |
-| Vlan4093 | - | IPv4 | - | - | - |
 
 ## Filters
 
