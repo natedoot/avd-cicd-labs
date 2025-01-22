@@ -27,9 +27,10 @@
           ansible-galaxy collection install arista.avd
       
       - name: Build and Deploy to CV
-        cd tech-library/datacenter/
-        python build.py
-        ansible-playbook playbooks/deploy.yml
+        run: |
+          cd tech-library/datacenter/
+          python build.py
+          ansible-playbook playbooks/deploy.yml
 
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v4
