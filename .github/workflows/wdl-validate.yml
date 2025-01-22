@@ -8,6 +8,9 @@ on:
         required: true
         default: "main"
 
+permissions:
+  issues: write  # Grant permissions to create GitHub issues
+
 jobs:
   validate:
     runs-on: self-hosted
