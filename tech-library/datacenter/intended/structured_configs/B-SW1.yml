@@ -1,0 +1,134 @@
+hostname: B-SW1
+is_deployed: true
+service_routing_protocols_model: multi-agent
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+ip_name_servers:
+- ip_address: 10.255.0.2
+  vrf: default
+spanning_tree:
+  mode: rapid-pvst
+  rapid_pvst_instances:
+  - id: 1-4094
+    priority: 32768
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
+vrfs:
+- name: default
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.119/24
+  gateway: null
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+eos_cli: 'agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=''true''
+
+  '
+ethernet_interfaces:
+- name: Ethernet1
+  peer: B-LEAF5
+  peer_interface: Ethernet7
+  peer_type: l3leaf
+  description: L2_B-LEAF5_Ethernet7
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+- name: Ethernet2
+  peer: B-LEAF6
+  peer_interface: Ethernet7
+  peer_type: l3leaf
+  description: L2_B-LEAF6_Ethernet7
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+- name: Ethernet3
+  peer: HostL
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: DEFAULT
+  description: HostL
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 40
+  spanning_tree_portfast: edge
+- name: Ethernet4
+  peer: HostM
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: DEFAULT
+  description: HostM
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 80
+  spanning_tree_portfast: edge
+port_channel_interfaces:
+- name: Port-Channel1
+  description: L2_B-LEAF5_Port-Channel7
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 40,80
+  shutdown: false
+vlans:
+- id: 80
+  name: Black
+  tenant: Dev
+- id: 40
+  name: Purple
+  tenant: EVPNGW
+ip_igmp_snooping:
+  globally_enabled: true
+metadata:
+  platform: vEOS-lab
+  cv_tags:
+    device_tags:
+    - name: topology_hint_datacenter
+      value: domain-b
+    - name: topology_hint_fabric
+      value: FABRIC
+    - name: topology_hint_pod
+      value: pod-b
+    - name: topology_hint_type
+      value: leaf

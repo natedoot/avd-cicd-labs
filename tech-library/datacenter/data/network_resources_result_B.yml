@@ -1,0 +1,144 @@
+ansible_facts:
+  ansible_net_api: cliconf
+  ansible_net_fqdn: A-LEAF4
+  ansible_net_gather_network_resources:
+  - l2_interfaces
+  - interfaces
+  - lag_interfaces
+  ansible_net_gather_subset:
+  - default
+  ansible_net_hostname: A-LEAF4
+  ansible_net_image: flash:/CloudEOS.swi
+  ansible_net_model: vEOS-lab
+  ansible_net_python_version: 3.11.7
+  ansible_net_serialnum: SN-A-LEAF4
+  ansible_net_system: eos
+  ansible_net_version: 4.32.0F
+  ansible_network_resources:
+    interfaces:
+    - description: A4_A4
+      enabled: true
+      name: Port-Channel8
+    - description: MLAG_PEER_A-LEAF3_Po1000
+      enabled: true
+      name: Port-Channel1000
+    - description: P2P_LINK_TO_A-SPINE1_Ethernet4
+      enabled: true
+      mode: layer3
+      mtu: 1500
+      name: Ethernet1
+    - description: P2P_LINK_TO_A-SPINE2_Ethernet4
+      enabled: true
+      mode: layer3
+      mtu: 1500
+      name: Ethernet2
+    - description: P2P_LINK_TO_A-SPINE3_Ethernet4
+      enabled: true
+      mode: layer3
+      mtu: 1500
+      name: Ethernet3
+    - description: P2P_LINK_TO_A-SPINE4_Ethernet4
+      enabled: true
+      mode: layer3
+      mtu: 1500
+      name: Ethernet4
+    - description: MLAG_PEER_A-LEAF3_Ethernet5
+      enabled: true
+      name: Ethernet5
+    - description: MLAG_PEER_A-LEAF3_Ethernet6
+      enabled: true
+      name: Ethernet6
+    - description: A5
+      enabled: true
+      name: Ethernet7
+    - description: A4_Ethernet2
+      enabled: true
+      name: Ethernet8
+    - description: EVPN_Overlay_Peering
+      enabled: true
+      name: Loopback0
+    - description: VTEP_VXLAN_Tunnel_Source
+      enabled: true
+      name: Loopback1
+    - description: Prod_VTEP_DIAGNOSTICS
+      enabled: true
+      name: Loopback101
+    - description: Dev_VTEP_DIAGNOSTICS
+      enabled: true
+      name: Loopback102
+    - description: oob_management
+      enabled: true
+      name: Management1
+    - description: Blue
+      enabled: true
+      mtu: 9014
+      name: Vlan10
+    - description: Orange
+      enabled: true
+      mtu: 9014
+      name: Vlan30
+    - description: Yellow
+      enabled: true
+      mtu: 9014
+      name: Vlan50
+    - description: 'MLAG_PEER_L3_iBGP: vrf Prod'
+      enabled: true
+      mtu: 1500
+      name: Vlan3001
+    - description: 'MLAG_PEER_L3_iBGP: vrf Dev'
+      enabled: true
+      mtu: 1500
+      name: Vlan3002
+    - description: MLAG_PEER_L3_PEERING
+      enabled: true
+      mtu: 1500
+      name: Vlan4093
+    - description: MLAG_PEER
+      enabled: true
+      mtu: 1500
+      name: Vlan4094
+    - description: A-LEAF4_VTEP
+      enabled: true
+      name: Vxlan1
+    l2_interfaces:
+    - access:
+        vlan: 10
+      name: Port-Channel8
+    - mode: trunk
+      name: Port-Channel1000
+    - name: Ethernet1
+    - name: Ethernet2
+    - name: Ethernet3
+    - name: Ethernet4
+    - name: Ethernet5
+    - name: Ethernet6
+    - access:
+        vlan: 30
+      name: Ethernet7
+    - name: Ethernet8
+    - name: Loopback0
+    - name: Loopback1
+    - name: Loopback101
+    - name: Loopback102
+    - name: Management1
+    - name: Vlan10
+    - name: Vlan30
+    - name: Vlan50
+    - name: Vlan3001
+    - name: Vlan3002
+    - name: Vlan4093
+    - name: Vlan4094
+    - name: Vxlan1
+    lag_interfaces:
+    - members:
+      - member: Ethernet8
+        mode: active
+      name: Port-Channel8
+    - members:
+      - member: Ethernet5
+        mode: active
+      - member: Ethernet6
+        mode: active
+      name: Port-Channel1000
+changed: false
+failed: false

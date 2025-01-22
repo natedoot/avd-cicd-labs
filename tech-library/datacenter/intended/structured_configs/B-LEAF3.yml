@@ -1,0 +1,412 @@
+hostname: B-LEAF3
+is_deployed: true
+router_bgp:
+  as: '65200'
+  router_id: 1.1.2.3
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  peer_groups:
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    remote_as: '65200'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+    route:
+      import_match_failure_action: discard
+  address_family_ipv4:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  neighbors:
+  - ip_address: 1.1.2.201
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-SPINE1
+    description: B-SPINE1_Loopback0
+  - ip_address: 1.1.2.202
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-SPINE2
+    description: B-SPINE2_Loopback0
+  - ip_address: 1.1.2.203
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-SPINE3
+    description: B-SPINE3_Loopback0
+  - ip_address: 1.1.2.204
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: B-SPINE4
+    description: B-SPINE4_Loopback0
+  vrfs:
+  - name: Dev
+    rd: 1.1.2.3:50002
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 50002:50002
+      export:
+      - address_family: evpn
+        route_targets:
+        - 50002:50002
+    router_id: 1.1.2.3
+    redistribute:
+      connected:
+        enabled: true
+  - name: Prod
+    rd: 1.1.2.3:50001
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 50001:50001
+      export:
+      - address_family: evpn
+        route_targets:
+        - 50001:50001
+    router_id: 1.1.2.3
+    redistribute:
+      connected:
+        enabled: true
+  vlans:
+  - id: 60
+    tenant: Dev
+    rd: 1.1.2.3:10060
+    route_targets:
+      both:
+      - 10060:10060
+    redistribute_routes:
+    - learned
+  - id: 10
+    tenant: Prod
+    rd: 1.1.2.3:10010
+    route_targets:
+      both:
+      - 10010:10010
+    redistribute_routes:
+    - learned
+service_routing_protocols_model: multi-agent
+ip_routing: true
+router_multicast:
+  ipv4:
+    routing: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+ip_name_servers:
+- ip_address: 10.255.0.2
+  vrf: default
+spanning_tree:
+  root_super: true
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 0
+  edge_port:
+    bpduguard_default: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
+vrfs:
+- name: default
+  ip_routing: false
+- name: Dev
+  tenant: Dev
+  ip_routing: true
+- name: Prod
+  tenant: Prod
+  ip_routing: true
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.113/24
+  gateway: null
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+link_tracking_groups:
+- name: CORE-LINKS
+  recovery_delay: 300
+eos_cli: 'agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=''true''
+
+  '
+ethernet_interfaces:
+- name: Ethernet1
+  peer: B-SPINE1
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_B-SPINE1_Ethernet3
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  link_tracking_groups:
+  - name: CORE-LINKS
+    direction: upstream
+  ip_address: 192.168.1.17/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet2
+  peer: B-SPINE2
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_B-SPINE2_Ethernet3
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  link_tracking_groups:
+  - name: CORE-LINKS
+    direction: upstream
+  ip_address: 192.168.1.19/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet3
+  peer: B-SPINE3
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_B-SPINE3_Ethernet3
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  link_tracking_groups:
+  - name: CORE-LINKS
+    direction: upstream
+  ip_address: 192.168.1.21/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet4
+  peer: B-SPINE4
+  peer_interface: Ethernet3
+  peer_type: spine
+  description: P2P_B-SPINE4_Ethernet3
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  link_tracking_groups:
+  - name: CORE-LINKS
+    direction: upstream
+  ip_address: 192.168.1.23/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  pim:
+    ipv4:
+      sparse_mode: true
+- name: Ethernet7
+  peer: HostI
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: DEFAULT
+  description: HostI
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 60
+  spanning_tree_portfast: edge
+- name: Ethernet8
+  peer: HostJ
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: DEFAULT
+  description: SERVER_HostJ_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 8
+    mode: active
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.1.2.3/32
+  isis_enable: EVPN_UNDERLAY
+  isis_passive: true
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 2.2.2.3/32
+  isis_enable: EVPN_UNDERLAY
+  isis_passive: true
+- name: Loopback102
+  description: DIAG_VRF_Dev
+  shutdown: false
+  vrf: Dev
+  ip_address: 10.102.102.3/32
+- name: Loopback101
+  description: DIAG_VRF_Prod
+  shutdown: false
+  vrf: Prod
+  ip_address: 10.101.102.3/32
+router_isis:
+  instance: EVPN_UNDERLAY
+  log_adjacency_changes: true
+  net: 49.1111.0010.0100.2003.00
+  router_id: 1.1.2.3
+  is_type: level-2
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 2.2.2.3:1
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+route_maps:
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 2.2.2.3:1 additive
+vlans:
+- id: 60
+  name: Red
+  tenant: Dev
+- id: 10
+  name: Blue
+  tenant: Prod
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:01
+vlan_interfaces:
+- name: Vlan60
+  tenant: Dev
+  description: Red
+  shutdown: false
+  mtu: 9014
+  ip_address_virtual: 10.60.60.1/24
+  vrf: Dev
+- name: Vlan10
+  tenant: Prod
+  description: Blue
+  shutdown: false
+  mtu: 9014
+  ip_address_virtual: 10.10.10.1/24
+  vrf: Prod
+vxlan_interface:
+  vxlan1:
+    description: B-LEAF3_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      vlans:
+      - id: 60
+        vni: 10060
+      - id: 10
+        vni: 10010
+      vrfs:
+      - name: Dev
+        vni: 50002
+      - name: Prod
+        vni: 50001
+virtual_source_nat_vrfs:
+- name: Dev
+  ip_address: 10.102.102.3
+- name: Prod
+  ip_address: 10.101.102.3
+port_channel_interfaces:
+- name: Port-Channel8
+  description: HostJ
+  shutdown: false
+  link_tracking_groups:
+  - name: CORE-LINKS
+    direction: downstream
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 10
+  spanning_tree_portfast: edge
+  evpn_ethernet_segment:
+    identifier: 0000:000b:0003:0004:0008
+    route_target: 00:03:00:04:00:08
+  lacp_id: 0003.0004.0008
+metadata:
+  platform: vEOS-lab
+  cv_tags:
+    device_tags:
+    - name: topology_hint_datacenter
+      value: domain-b
+    - name: topology_hint_fabric
+      value: FABRIC
+    - name: topology_hint_pod
+      value: pod-b
+    - name: topology_hint_type
+      value: leaf
