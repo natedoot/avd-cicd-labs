@@ -34,7 +34,8 @@ jobs:
           cd tech-library/datacenter
           ansible-playbook playbooks/validate.yml -i inventory.yml \
             -e ansible_user=${{ secrets.ANSIBLE_USERNAME }} \
-            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }}
+            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
+            -e only_failed_tests=True
 
       # Step 5: Create GitHub issue on validation failure
       - name: Create GitHub Issue on Validation Failure
