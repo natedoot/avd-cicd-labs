@@ -3,7 +3,18 @@
   hosts: DOMAIN_A
   connection: httpapi
   gather_facts: false
-    
+
+  vars:
+    ansible_network_os: arista.eos.eos
+    # Configure privilege escalation
+    ansible_become: true
+    ansible_become_method: enable
+    # HTTPAPI configuration
+    ansible_connection: httpapi
+    ansible_httpapi_port: 443
+    ansible_httpapi_use_ssl: true
+    ansible_httpapi_validate_certs: false
+
   tasks:
 
     - name: Validate
@@ -12,5 +23,6 @@
       vars:
         use_anta: true
         save_catalog: true
+        only_failed_tests: true
         skip_tests:
           - category: AvdTestHardware

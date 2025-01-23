@@ -25,11 +25,4 @@ avd-deploy-rcc: ## Deploy configurations using Change Control
 avd-validate: ## Validate configurations using AVD
 	ansible-playbook playbooks/validate.yml -i inventory.yml \
 		-e ansible_user=$(ANSIBLE_USERNAME) \
-		-e ansible_password=$(ANSIBLE_PASSWORD) \
-		-e only_failed_tests=True \
-		-e ansible_network_os=arista.eos.eos \
-		-e ansible_become=True \
-		-e ansible_become_method=enable \
-		-e ansible_connection=httpapi \
-		-e ansible_httpapi_validate_certs=False \
-		-e ansible_httpapi_port=443
+		-e ansible_password=$(ANSIBLE_PASSWORD)
