@@ -1,41 +1,82 @@
 ---
 
-  name: "Build and push fabric configs to cv"
-  
-  on:
-    push:
-      branches-ignore:
-        - main
-      paths:
-        - 'tech-library/datacenter/host_vars/**'
-        - 'tech-library/datacenter/group_vars/**'
-  jobs:
-    build-configs:
-      runs-on: self-hosted
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+name: "Build and push fabric configs to CV"
 
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.12'
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - 'tech-library/datacenter/host_vars/**'
+      - 'tech-library/datacenter/group_vars/**'
 
-        - name: Install Ansible and AVD roles 
-          run: |
-            pip install "pyavd[ansible]"
-            ansible-galaxy collection install arista.avd
-            pip install -r requirements.txt
-        
-        - name: Build and Deploy to CV
-          run: |
-            cd tech-library/datacenter/
-            python build.py
-            ansible-playbook playbooks/deploy.yml -i inventory.yml
+jobs:
+  build-configs:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: 'Upload Artifact'
-          uses: actions/upload-artifact@v4
-          with:
-            name: build-fabric-artifact
-            path: tech-library/datacenter/intended/**
-            retention-days: 1
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Ansible and AVD roles
+        run: |
+          pip install "pyavd[ansible]"
+          ansible-galaxy collection install arista.avd
+          pip install -r requirements.txt
+
+      - name: Build Fabric Configs
+        run: |
+          cd tech-library/datacenter/
+          make pyavd-build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-fabric-artifact
+          path: tech-library/datacenter/intended/**
+          retention-days: 1
+
+  deploy-configs:
+    runs-on: self-hosted
+    needs: build-configs  # Ensures this job runs after the build-configs job
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-fabric-artifact  # Matches the name used in the upload step
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Ansible and AVD roles
+        run: |
+          pip install "pyavd[ansible]"
+          ansible-galaxy collection install arista.avd
+          pip install -r requirements.txt
+
+      - name: Deploy to CV
+        run: |
+          cd tech-library/datacenter/
+          make avd-deploy

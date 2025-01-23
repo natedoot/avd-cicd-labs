@@ -1,4 +1,4 @@
-name: Validate Network with ANTA
+name: Validate and Merge Network Configurations
 
 on:
   workflow_dispatch:
@@ -6,17 +6,24 @@ on:
       environment:
         description: "The branch to validate (for inventory selection)"
         required: true
-        default: "main"
+        default: "feature-branch"
 
 permissions:
   issues: write  # Grant permissions to create GitHub issues
+  contents: write  # Allow merging branches into main
 
 jobs:
   validate:
     runs-on: self-hosted
+    env:  # Set environment variables here
+      CV_SVC_TOKEN: ${{ secrets.CV_SVC_TOKEN }}
+      ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
+      ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.environment }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,19 +35,12 @@ jobs:
           pip install "pyavd[ansible]"
           ansible-galaxy collection install arista.avd
 
-      # Step 4: Run AVD Validate State
       - name: Run AVD Validate State
-        env:
-          ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
-          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
         run: |
           cd tech-library/datacenter
-          ansible-playbook playbooks/validate.yml -i inventory.yml \
-            -e ansible_user=${{ secrets.ANSIBLE_USERNAME }} \
-            -e ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
-            -e only_failed_tests=True
+          make avd-build
+          make avd-validate
 
-      # Step 5: Parse Validation Report and Detect Failures
       - name: Parse Validation Report
         run: |
           cd tech-library/datacenter/reports
@@ -52,7 +52,7 @@ jobs:
             echo "No validation failures detected."
           fi
 
-      # Step 7: Create GitHub Issue on Validation Failure
+
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -61,40 +61,29 @@ jobs:
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
 
-      # Step 8: Fetch and Checkout Main Branch for Config Deployment
-      - name: Fetch and Checkout Main Branch
+      - name: Build and Deploy Configs on Failure
         if: failure()
         run: |
           git fetch origin main
           git checkout main
-
-      # Step 9: Build and Deploy Configs
-      - name: Build and Deploy Configs
-        if: failure()
-        run: |
           cd tech-library/datacenter
-          python build.py
-          ansible-playbook playbooks/deploy.yml -i inventory.yml \
-            -e cv_token=${{ secrets.CV_SVC_TOKEN }} \
-            -e cv_run_change_control=True
+          make pyavd-build
+          make avd-deploy-rcc
+
   merge:
-    needs: validate
-    runs-on: self-hosted
-    if: success()
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  needs: validate
+  runs-on: self-hosted
+  if: success()
+  steps:
+    - name: Checkout the Target Branch (Main)
+      uses: actions/checkout@v3
+      with:
+        ref: main  # Ensure the 'main' branch is checked out
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Merge Branch into Main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git checkout main
-          git merge --no-ff --allow-unrelated-histories ${{ github.event.inputs.environment }}
-          git push origin main
+    - name: Merge Branch into Main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git merge --no-ff --allow-unrelated-histories ${{ github.event.inputs.environment }}
+        git push origin main
 
