@@ -15,7 +15,7 @@ permissions:
 jobs:
   validate:
     runs-on: self-hosted
-    env:  # Set environment variables here
+    env:
       CV_SVC_TOKEN: ${{ secrets.CV_SVC_TOKEN }}
       ANSIBLE_USERNAME: ${{ secrets.ANSIBLE_USERNAME }}
       ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
@@ -44,14 +44,13 @@ jobs:
       - name: Parse Validation Report
         run: |
           cd tech-library/datacenter/reports
-          if grep -q ",FAILs," FABRIC-state.csv; then
+          if grep -q ",FAIL," FABRIC-state.csv; then
             echo "Validation failures detected in FABRIC-state.csv:"
             grep ",FAIL," FABRIC-state.csv
             exit 1
           else
             echo "No validation failures detected."
           fi
-
 
       - name: Create GitHub Issue on Validation Failure
         if: failure()
@@ -75,15 +74,20 @@ jobs:
     runs-on: self-hosted
     if: success()
     steps:
-      - name: Checkout the Target Branch (Main)
+      - name: Checkout the Main Branch
         uses: actions/checkout@v3
         with:
-          ref: main  # Ensure the 'main' branch is checked out
+          ref: main
 
-      - name: Merge Branch into Main
+      - name: Fetch and Merge Feature Branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git merge --no-ff --allow-unrelated-histories ${{ github.event.inputs.environment }}
-          git push origin main
+          # Fetch the feature branch from the remote repository
+          git fetch origin ${{ github.event.inputs.environment }}
 
+          # Merge the remote branch into main
+          git merge --no-ff origin/${{ github.event.inputs.environment }}
+
+          # Push the merged changes to the main branch
+          git push origin main
