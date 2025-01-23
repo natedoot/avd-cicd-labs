@@ -46,7 +46,7 @@ jobs:
           cd tech-library/datacenter/reports
           if grep -q ",FAILs," FABRIC-state.csv; then
             echo "Validation failures detected in FABRIC-state.csv:"
-            grep ",FAILs," FABRIC-state.csv
+            grep ",FAIL," FABRIC-state.csv
             exit 1
           else
             echo "No validation failures detected."
