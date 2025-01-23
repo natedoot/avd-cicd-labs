@@ -87,6 +87,7 @@ local_users:
 cvp_instance_ips:
   - 192.168.0.5
 cvp_token_file: /tmp/token
+terminattr_disable_aaa: True
 
 custom_structured_configuration_aaa_authorization:
   exec:

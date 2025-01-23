@@ -31,4 +31,5 @@ avd-validate: ## Validate configurations using AVD
 		-e ansible_become=True \
 		-e ansible_become_method=enable \
 		-e ansible_connection=httpapi \
-		-e ansible_httpapi_validate_certs=False
+		-e ansible_httpapi_validate_certs=False \
+		-e ansible_httpapi_port=443

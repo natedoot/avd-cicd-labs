@@ -68,7 +68,7 @@ servers:
           description: A6
           mode: active
           
-  - name: HostG
+  - name: B1
     adapters:
       - endpoint_ports: [ Ethernet1, Ethernet2 ]
         switch_ports: [ Ethernet7, Ethernet7 ]
