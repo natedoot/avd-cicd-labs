@@ -11,5 +11,4 @@
       vars:
         deploy_to_cv_accept_preview: true
         cv_server: 10.18.160.209
-        cv_token: "{{lookup('file', '../act/act-cv.tok')}}"
         cv_verify_certs: false
