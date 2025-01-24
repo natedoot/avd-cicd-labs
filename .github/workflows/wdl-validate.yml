@@ -10,7 +10,7 @@ on:
 
 permissions:
   issues: write  # Grant permissions to create GitHub issues
-  contents: write  # Allow merging branches into main
+  contents: write  # Allow creating pull requests
 
 jobs:
   validate:
@@ -57,8 +57,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd tech-library/datacenter/reports
+          echo "Validation failures detected in FABRIC-state.csv:" > issue_body.txt
+          grep ",FAIL," FABRIC-state.csv >> issue_body.txt
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
-                          --body "The validation step failed for environment: ${{ github.event.inputs.environment }}. Please investigate the logs for more details."
+                          --body-file issue_body.txt
 
       - name: Build and Deploy Configs on Failure
         if: failure()
@@ -79,15 +82,26 @@ jobs:
         with:
           ref: main
 
-      - name: Fetch and Merge Feature Branch
+      - name: Fetch Feature Branch
+        run: |
+          # Fetch the feature branch to ensure it is available for the PR
+          git fetch origin ${{ github.event.inputs.environment }}
+
+      - name: Parse Validation Results
+        id: parse-validation-results
+        run: |
+          # Include validation results in the PR body
+          cd tech-library/datacenter/reports
+          echo "Validation Status: PASSED" >> $GITHUB_ENV
+          echo "Validation Status: All tests passed!" >> pr_body.txt
+
+      - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Fetch the feature branch from the remote repository
-          git fetch origin ${{ github.event.inputs.environment }}
-
-          # Merge the remote branch into main
-          git merge --no-ff --allow-unrelated-histories origin/${{ github.event.inputs.environment }}
-
-          # Push the merged changes to the main branch
-          git push origin main
+          gh pr create \
+            --head ${{ github.event.inputs.environment }} \
+            --base main \
+            --title "Validation Results for ${{ github.event.inputs.environment }}" \
+            --body-file pr_body.txt \
+            --label "validation-pending"
