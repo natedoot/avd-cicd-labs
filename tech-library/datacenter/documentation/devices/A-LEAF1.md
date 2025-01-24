@@ -207,14 +207,14 @@ dhcp relay
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -disableaaa -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -289,7 +289,7 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
-| 20 | Green | - |
+| 10 | Blue | - |
 | 30 | Orange | - |
 | 3001 | MLAG_L3_VRF_Prod | MLAG |
 | 4093 | MLAG_L3 | MLAG |
@@ -299,8 +299,8 @@ vlan internal order ascending range 1006 1199
 
 ```eos
 !
-vlan 20
-   name Green
+vlan 10
+   name Blue
 !
 vlan 30
    name Orange
@@ -343,8 +343,8 @@ mac address-table aging-time 1800
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_A-LEAF2_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF2_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
-| Ethernet7 | SERVER_A1_Ethernet1 | *access | *20 | *- | *- | 7 |
-| Ethernet8 | SERVER_A2_Ethernet1 | *access | *30 | *- | *- | 8 |
+| Ethernet7 | SERVER_HostA1_eth1 | *access | *10 | *- | *- | 7 |
+| Ethernet8 | SERVER_HostA2_eth1 | *access | *30 | *- | *- | 8 |
 
 *Inherited from Port-Channel Interface
 
@@ -400,12 +400,12 @@ interface Ethernet6
    channel-group 1000 mode active
 !
 interface Ethernet7
-   description SERVER_A1_Ethernet1
+   description SERVER_HostA1_eth1
    no shutdown
    channel-group 7 mode active
 !
 interface Ethernet8
-   description SERVER_A2_Ethernet1
+   description SERVER_HostA2_eth1
    no shutdown
    channel-group 8 mode active
 ```
@@ -418,8 +418,8 @@ interface Ethernet8
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | A1 | access | 20 | - | - | - | - | 7 | - |
-| Port-Channel8 | A2 | access | 30 | - | - | - | - | 8 | - |
+| Port-Channel7 | SERVER_HostA1 | access | 10 | - | - | - | - | 7 | - |
+| Port-Channel8 | SERVER_HostA2 | access | 30 | - | - | - | - | 8 | - |
 | Port-Channel1000 | MLAG_A-LEAF2_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -427,22 +427,24 @@ interface Ethernet8
 ```eos
 !
 interface Port-Channel7
-   description A1
+   description SERVER_HostA1
    no shutdown
-   switchport access vlan 20
+   switchport access vlan 10
    switchport mode access
    switchport
    mlag 7
    spanning-tree portfast
+   spanning-tree bpduguard enable
 !
 interface Port-Channel8
-   description A2
+   description SERVER_HostA2
    no shutdown
    switchport access vlan 30
    switchport mode access
    switchport
    mlag 8
    spanning-tree portfast
+   spanning-tree bpduguard enable
 !
 interface Port-Channel1000
    description MLAG_A-LEAF2_Port-Channel1000
@@ -499,7 +501,7 @@ interface Loopback101
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan20 | Green | Prod | 9014 | False |
+| Vlan10 | Blue | Prod | 9014 | False |
 | Vlan30 | Orange | Prod | 9014 | False |
 | Vlan3001 | MLAG_L3_VRF_Prod | Prod | 9214 | False |
 | Vlan4093 | MLAG_L3 | default | 9214 | False |
@@ -509,7 +511,7 @@ interface Loopback101
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ------ | ------- |
-| Vlan20 |  Prod  |  -  |  10.20.20.1/24  |  -  |  -  |  -  |
+| Vlan10 |  Prod  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |
 | Vlan30 |  Prod  |  -  |  10.30.30.1/24  |  -  |  -  |  -  |
 | Vlan3001 |  Prod  |  192.0.0.0/31  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  192.0.0.0/31  |  -  |  -  |  -  |  -  |
@@ -519,12 +521,12 @@ interface Loopback101
 
 ```eos
 !
-interface Vlan20
-   description Green
+interface Vlan10
+   description Blue
    no shutdown
    mtu 9014
    vrf Prod
-   ip address virtual 10.20.20.1/24
+   ip address virtual 10.10.10.1/24
 !
 interface Vlan30
    description Orange
@@ -568,7 +570,7 @@ interface Vlan4094
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
-| 20 | 10020 | - | - |
+| 10 | 10010 | - | - |
 | 30 | 10030 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
@@ -586,7 +588,7 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
-   vxlan vlan 20 vni 10020
+   vxlan vlan 10 vni 10010
    vxlan vlan 30 vni 10030
    vxlan vrf Prod vni 50001
 ```
@@ -731,7 +733,7 @@ ASN Notation: asplain
 
 | VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
-| 20 | 1.1.1.1:10020 | 10020:10020 | - | - | learned |
+| 10 | 1.1.1.1:10010 | 10010:10010 | - | - | learned |
 | 30 | 1.1.1.1:10030 | 10030:10030 | - | - | learned |
 
 #### Router BGP VRFs
@@ -795,9 +797,9 @@ router bgp 65112
    neighbor 192.168.1.6 description A-SPINE4_Ethernet1
    redistribute connected route-map RM-CONN-2-BGP
    !
-   vlan 20
-      rd 1.1.1.1:10020
-      route-target both 10020:10020
+   vlan 10
+      rd 1.1.1.1:10010
+      route-target both 10010:10010
       redistribute learned
    !
    vlan 30

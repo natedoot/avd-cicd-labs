@@ -140,7 +140,7 @@ daemon_terminattr:
   cvvrf: default
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  disable_aaa: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -252,13 +252,14 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel7
-  description: A6
+  description: SERVER_HostA6
   shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 70
   spanning_tree_portfast: edge
+  spanning_tree_bpduguard: 'True'
   mlag: 7
 ethernet_interfaces:
 - name: Ethernet5
@@ -320,11 +321,11 @@ ethernet_interfaces:
     enabled: false
   ip_address: 192.168.1.47/31
 - name: Ethernet7
-  peer: A6
-  peer_interface: Ethernet2
+  peer: HostA6
+  peer_interface: eth2
   peer_type: server
-  port_profile: DEFAULT
-  description: SERVER_A6_Ethernet2
+  port_profile: PROF-BROWN-MLAG
+  description: SERVER_HostA6_eth2
   shutdown: false
   channel_group:
     id: 7
@@ -419,3 +420,6 @@ metadata:
       value: pod-a
     - name: topology_hint_rack
       value: DOMAIN_A_LC
+aaa_authorization:
+  exec:
+    default: local

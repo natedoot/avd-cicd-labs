@@ -207,14 +207,14 @@ dhcp relay
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -disableaaa -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -352,8 +352,8 @@ mac address-table aging-time 1800
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_A-LEAF4_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF4_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
-| Ethernet7 | A3 | access | 50 | - | - | - |
-| Ethernet8 | SERVER_A4_Ethernet1 | *access | *10 | *- | *- | 8 |
+| Ethernet7 | SERVER_HostA3_eth1 | access | 50 | - | - | - |
+| Ethernet8 | SERVER_HostA4_eth1 | *access | *10 | *- | *- | 8 |
 
 *Inherited from Port-Channel Interface
 
@@ -409,15 +409,16 @@ interface Ethernet6
    channel-group 1000 mode active
 !
 interface Ethernet7
-   description A3
+   description SERVER_HostA3_eth1
    no shutdown
    switchport access vlan 50
    switchport mode access
    switchport
    spanning-tree portfast
+   spanning-tree bpduguard enable
 !
 interface Ethernet8
-   description SERVER_A4_Ethernet1
+   description SERVER_HostA4_eth1
    no shutdown
    channel-group 8 mode active
 ```
@@ -430,7 +431,7 @@ interface Ethernet8
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel8 | A4 | access | 10 | - | - | - | - | 8 | - |
+| Port-Channel8 | SERVER_HostA4 | access | 10 | - | - | - | - | 8 | - |
 | Port-Channel1000 | MLAG_A-LEAF4_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -438,13 +439,14 @@ interface Ethernet8
 ```eos
 !
 interface Port-Channel8
-   description A4
+   description SERVER_HostA4
    no shutdown
    switchport access vlan 10
    switchport mode access
    switchport
    mlag 8
    spanning-tree portfast
+   spanning-tree bpduguard enable
 !
 interface Port-Channel1000
    description MLAG_A-LEAF4_Port-Channel1000

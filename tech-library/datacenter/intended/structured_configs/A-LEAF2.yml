@@ -121,12 +121,12 @@ router_bgp:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
       description: A-LEAF1_Vlan3001
   vlans:
-  - id: 20
+  - id: 10
     tenant: Prod
-    rd: 1.1.1.2:10020
+    rd: 1.1.1.2:10010
     route_targets:
       both:
-      - 10020:10020
+      - 10010:10010
     redistribute_routes:
     - learned
   - id: 30
@@ -148,7 +148,7 @@ daemon_terminattr:
   cvvrf: default
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  disable_aaa: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -214,8 +214,8 @@ vlans:
   name: MLAG
   trunk_groups:
   - MLAG
-- id: 20
-  name: Green
+- id: 10
+  name: Blue
   tenant: Prod
 - id: 30
   name: Orange
@@ -237,12 +237,12 @@ vlan_interfaces:
   no_autostate: true
   mtu: 1500
   ip_address: 169.254.0.1/31
-- name: Vlan20
+- name: Vlan10
   tenant: Prod
-  description: Green
+  description: Blue
   shutdown: false
   mtu: 9014
-  ip_address_virtual: 10.20.20.1/24
+  ip_address_virtual: 10.10.10.1/24
   vrf: Prod
 - name: Vlan30
   tenant: Prod
@@ -270,22 +270,24 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel7
-  description: A1
+  description: SERVER_HostA1
   shutdown: false
   switchport:
     enabled: true
     mode: access
-    access_vlan: 20
+    access_vlan: 10
   spanning_tree_portfast: edge
+  spanning_tree_bpduguard: 'True'
   mlag: 7
 - name: Port-Channel8
-  description: A2
+  description: SERVER_HostA2
   shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 30
   spanning_tree_portfast: edge
+  spanning_tree_bpduguard: 'True'
   mlag: 8
 ethernet_interfaces:
 - name: Ethernet5
@@ -347,21 +349,21 @@ ethernet_interfaces:
     enabled: false
   ip_address: 192.168.1.15/31
 - name: Ethernet7
-  peer: A1
-  peer_interface: Ethernet2
+  peer: HostA1
+  peer_interface: eth2
   peer_type: server
-  port_profile: DEFAULT
-  description: SERVER_A1_Ethernet2
+  port_profile: PROF-BLUE-MLAG
+  description: SERVER_HostA1_eth2
   shutdown: false
   channel_group:
     id: 7
     mode: active
 - name: Ethernet8
-  peer: A2
-  peer_interface: Ethernet2
+  peer: HostA2
+  peer_interface: eth2
   peer_type: server
-  port_profile: DEFAULT
-  description: SERVER_A2_Ethernet2
+  port_profile: PROF-ORANGE-MLAG
+  description: SERVER_HostA2_eth2
   shutdown: false
   channel_group:
     id: 8
@@ -436,8 +438,8 @@ vxlan_interface:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
-      - id: 20
-        vni: 10020
+      - id: 10
+        vni: 10010
       - id: 30
         vni: 10030
       vrfs:
@@ -458,3 +460,6 @@ metadata:
       value: pod-a
     - name: topology_hint_rack
       value: DOMAIN_A_LA
+aaa_authorization:
+  exec:
+    default: local

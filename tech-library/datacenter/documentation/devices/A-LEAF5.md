@@ -207,14 +207,14 @@ dhcp relay
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -disableaaa -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -339,7 +339,7 @@ mac address-table aging-time 1800
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_A-LEAF6_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF6_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
-| Ethernet7 | SERVER_A6_Ethernet1 | *access | *70 | *- | *- | 7 |
+| Ethernet7 | SERVER_HostA6_eth1 | *access | *70 | *- | *- | 7 |
 
 *Inherited from Port-Channel Interface
 
@@ -395,7 +395,7 @@ interface Ethernet6
    channel-group 1000 mode active
 !
 interface Ethernet7
-   description SERVER_A6_Ethernet1
+   description SERVER_HostA6_eth1
    no shutdown
    channel-group 7 mode active
 ```
@@ -408,7 +408,7 @@ interface Ethernet7
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | A6 | access | 70 | - | - | - | - | 7 | - |
+| Port-Channel7 | SERVER_HostA6 | access | 70 | - | - | - | - | 7 | - |
 | Port-Channel1000 | MLAG_A-LEAF6_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -416,13 +416,14 @@ interface Ethernet7
 ```eos
 !
 interface Port-Channel7
-   description A6
+   description SERVER_HostA6
    no shutdown
    switchport access vlan 70
    switchport mode access
    switchport
    mlag 7
    spanning-tree portfast
+   spanning-tree bpduguard enable
 !
 interface Port-Channel1000
    description MLAG_A-LEAF6_Port-Channel1000

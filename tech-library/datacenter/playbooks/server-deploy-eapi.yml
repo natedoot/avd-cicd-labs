@@ -1,29 +1,28 @@
 ---
 
 - name: Deploy server configs
-  hosts: "{{ target_hosts }}"
+  hosts: SERVERS
   connection: local
   gather_facts: false
   vars:
       # EOS Configuration Directory name
-      
-      ansible_user: cvpadmin
-      ansible_password: arista123
-      ansible_network_os: arista.eos.eos
-      # Configure privilege escalation
-      ansible_become: true
-      ansible_become_method: enable
-      # HTTPAPI configuration
-      ansible_connection: httpapi
-      ansible_httpapi_port: 443
-      ansible_httpapi_use_ssl: true
-      ansible_httpapi_validate_certs: false
-      eos_config_dir_name: "server_configs"
-      eos_config_dir: "/servers/{{ eos_config_dir_name }}"
+    output_dir_name: 'servers'
+    output_dir: '{{ root_dir }}/{{ output_dir_name }}'
 
   tasks:
         
-    - name: deploy eapi
+    - name: build servers
+      tags: [build]
       ansible.builtin.import_role:
-        name: arista.avd.eos_config_deploy_eapi
+        name: arista.avd.eos_cli_config_gen
+      
+    - name: Deploy configurations and tags to CloudVision
+      tags: [deploy]
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        deploy_to_cv_accept_preview: true
+        cv_server: 10.18.160.209
+        cv_token: "{{lookup('file', '../act/act-cv.tok')}}"
+        cv_verify_certs: false
         
