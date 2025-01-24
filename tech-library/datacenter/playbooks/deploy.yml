@@ -1,7 +1,7 @@
 ---
 
 - name: Configuration deployment
-  hosts: "{{ target_hosts }}"
+  hosts: FABRIC
   connection: local
   gather_facts: false
   tasks:
