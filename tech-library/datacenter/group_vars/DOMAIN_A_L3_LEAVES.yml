@@ -1,6 +1,6 @@
 ---
 type: l3leaf
 
-csc_dhcp_relay:
+dhcp_relay:
   tunnel_requests_disabled: true
   mlag_peerlink_requests_disabled: true

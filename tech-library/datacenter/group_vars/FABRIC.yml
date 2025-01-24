@@ -112,6 +112,6 @@ mlag_ibgp_peering_vrfs:
 mac_address_table:
   aging_time: 1800
 
-arp:
+custom_structured_configuration_arp:
   aging:
     timeout_default: 1500
