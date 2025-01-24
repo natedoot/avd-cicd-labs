@@ -303,7 +303,7 @@ daemon_terminattr:
   cvvrf: default
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  disable_aaa: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -692,3 +692,6 @@ metadata:
       value: pod-a
     - name: topology_hint_rack
       value: DOMAIN_A_EVPNGW
+aaa_authorization:
+  exec:
+    default: local

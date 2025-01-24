@@ -176,7 +176,7 @@ daemon_terminattr:
   cvvrf: default
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  disable_aaa: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -324,13 +324,14 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel8
-  description: A4
+  description: SERVER_HostA4
   shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 10
   spanning_tree_portfast: edge
+  spanning_tree_bpduguard: 'True'
   mlag: 8
 ethernet_interfaces:
 - name: Ethernet5
@@ -392,23 +393,24 @@ ethernet_interfaces:
     enabled: false
   ip_address: 192.168.1.23/31
 - name: Ethernet7
-  peer: A3
-  peer_interface: Ethernet1
+  peer: HostA3
+  peer_interface: eth1
   peer_type: server
-  port_profile: DEFAULT
-  description: A3
+  port_profile: PROF-YELLOW-SINGLE-HOMED
+  description: SERVER_HostA3_eth1
   shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 50
   spanning_tree_portfast: edge
+  spanning_tree_bpduguard: 'True'
 - name: Ethernet8
-  peer: A4
-  peer_interface: Ethernet1
+  peer: HostA4
+  peer_interface: eth1
   peer_type: server
-  port_profile: DEFAULT
-  description: SERVER_A4_Ethernet1
+  port_profile: PROF-BLUE-MLAG
+  description: SERVER_HostA4_eth1
   shutdown: false
   channel_group:
     id: 8
@@ -516,3 +518,6 @@ metadata:
       value: pod-a
     - name: topology_hint_rack
       value: DOMAIN_A_LB
+aaa_authorization:
+  exec:
+    default: local

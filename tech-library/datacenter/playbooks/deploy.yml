@@ -1,7 +1,7 @@
 ---
 
 - name: Configuration deployment
-  hosts: DOMAIN_A
+  hosts: FABRIC
   connection: local
   gather_facts: false
   tasks:

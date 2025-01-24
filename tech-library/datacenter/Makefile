@@ -26,3 +26,11 @@ avd-validate: ## Validate configurations using AVD
 	ansible-playbook playbooks/validate.yml -i inventory.yml \
 		-e ansible_user=$(ANSIBLE_USERNAME) \
 		-e ansible_password=$(ANSIBLE_PASSWORD)
+
+.PHONY: avd-server-build
+avd-server-build:
+	ansible-playbook playbooks/server-deploy-eapi.yml --tags build -i inventory.yml -e "target_hosts=SERVERS"
+
+.PHONY: avd-server-deploy
+avd-server-deploy:
+	ansible-playbook playbooks/server-deploy-eapi.yml --tags deploy -i inventory.yml -e "target_hosts=SERVERS" 

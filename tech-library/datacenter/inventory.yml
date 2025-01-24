@@ -179,7 +179,7 @@ all:
               ansible_host: 10.255.77.18
               ansible_user: cvpadmin
               ansible_ssh_pass: arista123
-
+    
     NETWORK_SERVICES:
       children:
         DOMAIN_B_L2_SW:

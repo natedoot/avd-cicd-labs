@@ -135,7 +135,7 @@ daemon_terminattr:
   cvvrf: default
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  disable_aaa: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -294,3 +294,6 @@ metadata:
       value: FABRIC
     - name: topology_hint_pod
       value: pod-a
+aaa_authorization:
+  exec:
+    default: local
