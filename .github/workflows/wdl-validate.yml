@@ -92,7 +92,7 @@ jobs:
         run: |
           # Include validation results in the PR body
           cd tech-library/datacenter/reports
-          echo "Validation Status: PASSED" >> $GITHUB_ENV
+          echo "Validation_Status=PASSED" >> $GITHUB_ENV
           echo "Validation Status: All tests passed!" >> pr_body.txt
 
       - name: Create Pull Request
