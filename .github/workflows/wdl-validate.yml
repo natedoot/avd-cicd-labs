@@ -52,6 +52,17 @@ jobs:
             echo "No validation failures detected."
           fi
 
+      - name: Create Validation Artifact
+        run: |
+          mkdir -p tech-library/datacenter/reports
+          cd tech-library/datacenter/reports
+          tar -czf validation-results.tar.gz FABRIC-state.csv
+        - name: Upload Validation Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-results
+          path: tech-library/datacenter/reports/validation-results.tar.gz
+
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -82,10 +93,17 @@ jobs:
         with:
           ref: main
 
-      - name: Fetch Feature Branch
+      - name: Fetch Validation Results Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: validation-results
+          path: tech-library/datacenter/reports
+
+      - name: Extract Validation Results
         run: |
-          # Fetch the feature branch to ensure it is available for the PR
-          git fetch origin ${{ github.event.inputs.environment }}
+          mkdir -p tech-library/datacenter/reports
+          cd tech-library/datacenter/reports
+          tar -xzf validation-results.tar.gz
 
       - name: Parse Validation Results
         id: parse-validation-results
