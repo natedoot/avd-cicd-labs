@@ -87,7 +87,7 @@ jobs:
           git fetch origin ${{ github.event.inputs.environment }}
 
           # Merge the remote branch into main
-          git merge --no-ff origin/${{ github.event.inputs.environment }}
+          git merge --no-ff --allow-unrelated-histories origin/${{ github.event.inputs.environment }}
 
           # Push the merged changes to the main branch
           git push origin main
