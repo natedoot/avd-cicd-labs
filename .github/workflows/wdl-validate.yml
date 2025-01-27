@@ -87,14 +87,6 @@ jobs:
           # Fetch the feature branch to ensure it is available for the PR
           git fetch origin ${{ github.event.inputs.environment }}
 
-      - name: Parse Validation Results
-        id: parse-validation-results
-        run: |
-          # Include validation results in the PR body
-          cd tech-library/datacenter/reports
-          echo "Validation_Status=PASSED" >> $GITHUB_ENV
-          echo "Validation Status: All tests passed!" >> pr_body.txt
-
       - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -102,6 +94,5 @@ jobs:
           gh pr create \
             --head ${{ github.event.inputs.environment }} \
             --base main \
-            --title "Validation Results for ${{ github.event.inputs.environment }}" \
-            --body-file pr_body.txt \
-            --label "validation-pending"
+            --title "Validation Successful for ${{ github.event.inputs.environment }}" \
+            --label "validation-success"
