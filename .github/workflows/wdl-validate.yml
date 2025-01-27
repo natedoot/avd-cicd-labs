@@ -87,10 +87,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Create the label if it doesn't exist
-          if ! gh label list | grep -q "^validation-success"; then
-            gh label create "validation-success" --description "Indicates successful validation" --color "#0E8A16"
+          # Check if the label exists
+          LABEL_NAME="validation-success"
+          LABEL_COLOR="0E8A16"
+          LABEL_DESCRIPTION="Indicates successful validation"
+
+          if ! gh api repos/${{ github.repository }}/labels --jq ".[] | select(.name == \"$LABEL_NAME\")" > /dev/null 2>&1; then
+            # Create the label if it doesn't exist
+            gh api repos/${{ github.repository }}/labels \
+              -X POST \
+              -f name="$LABEL_NAME" \
+              -f color="$LABEL_COLOR" \
+              -f description="$LABEL_DESCRIPTION"
           fi
+
 
       - name: Create Pull Request Body File
         run: |
