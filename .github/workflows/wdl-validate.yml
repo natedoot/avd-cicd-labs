@@ -83,17 +83,20 @@ jobs:
           # Fetch the feature branch to ensure it is available for the PR
           git fetch origin ${{ github.event.inputs.environment }}
 
+      - name: Ensure Label Exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create the label if it doesn't exist
+          if ! gh label list | grep -q "^validation-success"; then
+            gh label create "validation-success" --description "Indicates successful validation" --color "#0E8A16"
+          fi
+
       - name: Create Pull Request Body File
         run: |
           # Create a body file for the pull request
           echo "Validation was successful for the branch: ${{ github.event.inputs.environment }}." > /tmp/pr_body.txt
           echo "All checks passed, and the branch is ready to merge." >> /tmp/pr_body.txt
-
-      - name: Debug PR Body File (Optional)
-        run: |
-          # Confirm the content of the body file
-          echo "PR Body File Content:"
-          cat /tmp/pr_body.txt
 
       - name: Create Pull Request
         env:
