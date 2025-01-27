@@ -26,4 +26,4 @@
         only_failed_tests: true
         skip_tests:
           - category: AvdTestHardware
-          - category: AvdTestNTP
+          #- category: AvdTestNTP
