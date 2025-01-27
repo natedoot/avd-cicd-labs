@@ -11,6 +11,7 @@ on:
 permissions:
   issues: write  # Grant permissions to create GitHub issues
   contents: write  # Allow creating pull requests
+  pull-requests: write
 
 jobs:
   validate:
