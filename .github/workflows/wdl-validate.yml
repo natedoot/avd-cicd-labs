@@ -34,13 +34,11 @@ jobs:
         run: |
           pip install "pyavd[ansible]"
           ansible-galaxy collection install arista.avd
-
       - name: Run AVD Validate State
         run: |
           cd tech-library/datacenter
           make avd-build
           make avd-validate
-
       - name: Parse Validation Report
         run: |
           cd tech-library/datacenter/reports
@@ -51,7 +49,6 @@ jobs:
           else
             echo "No validation failures detected."
           fi
-
       - name: Create GitHub Issue on Validation Failure
         if: failure()
         env:
@@ -62,7 +59,6 @@ jobs:
           grep ",FAIL," FABRIC-state.csv >> issue_body.txt
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body-file issue_body.txt
-
       - name: Build and Deploy Configs on Failure
         if: failure()
         run: |
@@ -87,6 +83,18 @@ jobs:
           # Fetch the feature branch to ensure it is available for the PR
           git fetch origin ${{ github.event.inputs.environment }}
 
+      - name: Create Pull Request Body File
+        run: |
+          # Create a body file for the pull request
+          echo "Validation was successful for the branch: ${{ github.event.inputs.environment }}." > /tmp/pr_body.txt
+          echo "All checks passed, and the branch is ready to merge." >> /tmp/pr_body.txt
+
+      - name: Debug PR Body File (Optional)
+        run: |
+          # Confirm the content of the body file
+          echo "PR Body File Content:"
+          cat /tmp/pr_body.txt
+
       - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,4 +103,5 @@ jobs:
             --head ${{ github.event.inputs.environment }} \
             --base main \
             --title "Validation Successful for ${{ github.event.inputs.environment }}" \
+            --body-file /tmp/pr_body.txt \
             --label "validation-success"
