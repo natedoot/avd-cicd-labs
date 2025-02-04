@@ -1,8 +1,6 @@
-# ignore venv
-**/venv/**
 # ignore avd generated files
 *.cfg
-# ignore local python env
-.python-version
-# ignore logs
-nornir.log
+# ignore vault secrets
+secrets.yml
+# ignore act files
+act/

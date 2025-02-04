@@ -1,4 +1,0 @@
-nornir
-nornir_ansible
-nornir_napalm
-nornir_utils
