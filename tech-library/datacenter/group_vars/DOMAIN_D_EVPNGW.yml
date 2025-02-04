@@ -1,0 +1,10 @@
+---
+type: l3leaf
+
+evpn_multicast: false
+underlay_multicast: false
+
+underlay_ipv6: false
+underlay_rfc5549: false
+overlay_mlag_rfc5549: false
+overlay_routing_protocol_address_family: ipv4

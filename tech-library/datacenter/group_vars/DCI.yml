@@ -18,6 +18,10 @@ l3_edge:
       - 65500
       - 65378
       include_in_underlay_protocol: true
+    - name: DCI_D_profile
+      as:
+      - 65500
+      - 65478
   # Define each P2P L3 link and link the nodes, the interfaces and the profile used.
   p2p_links:
   - id: 1
@@ -104,3 +108,31 @@ l3_edge:
     ip:
       - 172.16.3.7/31
       - 172.16.3.6/31
+  - id: 1
+    nodes: [BB1, D-LEAF7]
+    interfaces: [Ethernet7, Ethernet7]
+    profile: DCI_D_profile
+    ip:
+      - 172.16.4.1/31
+      - 172.16.4.0/31
+  - id: 2
+    nodes: [BB2, D-LEAF7]
+    interfaces: [Ethernet7, Ethernet8]
+    profile: DCI_D_profile
+    ip:
+      - 172.16.4.3/31
+      - 172.16.4.2/31
+  - id: 3
+    nodes: [BB1, D-LEAF8]
+    interfaces: [Ethernet8, Ethernet7]
+    profile: DCI_D_profile
+    ip:
+      - 172.16.4.5/31
+      - 172.16.4.4/31
+  - id: 4
+    nodes: [BB2, D-LEAF8]
+    interfaces: [Ethernet8, Ethernet8]
+    profile: DCI_D_profile
+    ip:
+      - 172.16.4.7/31
+      - 172.16.4.6/31
