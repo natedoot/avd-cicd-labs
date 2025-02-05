@@ -7,148 +7,148 @@ all:
             DOMAIN_A_SPINES:
               hosts:
                 A-SPINE1:
-                  ansible_host: 10.18.177.33
+                  ansible_host: 192.168.0.11
                 A-SPINE2:
-                  ansible_host: 10.18.177.93
+                  ansible_host: 192.168.0.12
                 A-SPINE3:
-                  ansible_host: 10.18.177.52
+                  ansible_host: 192.168.0.13
                 A-SPINE4:
-                  ansible_host: 10.18.177.153
+                  ansible_host: 192.168.0.14
                   
             DOMAIN_A_L3_LEAVES:
               hosts:
                 A-LEAF1:
-                  ansible_host: 10.18.177.6
+                  ansible_host: 192.168.0.101
                 A-LEAF2:
-                  ansible_host: 10.18.177.134
+                  ansible_host: 192.168.0.102
                 A-LEAF3:
-                  ansible_host: 10.18.177.49
+                  ansible_host: 192.168.0.103
                 A-LEAF4:
-                  ansible_host: 10.18.177.0
+                  ansible_host: 192.168.0.104
                 A-LEAF5:
-                  ansible_host: 10.18.177.165
+                  ansible_host: 192.168.0.105
                 A-LEAF6:
-                  ansible_host: 10.18.177.142
+                  ansible_host: 192.168.0.106
                   
             DOMAIN_A_EVPNGW:
               hosts:
                 A-LEAF7:
-                  ansible_host: 10.18.177.169
+                  ansible_host: 192.168.0.107
                 A-LEAF8:
-                  ansible_host: 10.18.177.133
+                  ansible_host: 192.168.0.108
                   
         DOMAIN_B:
           children:
             DOMAIN_B_SPINES:
               hosts:
                 B-SPINE1:
-                  ansible_host: 10.18.177.5
+                  ansible_host: 192.168.0.15
                 B-SPINE2:
-                  ansible_host: 10.18.177.8
+                  ansible_host: 192.168.0.16
                 B-SPINE3:
-                  ansible_host: 10.18.177.123
+                  ansible_host: 192.168.0.17
                 B-SPINE4:
-                  ansible_host: 10.18.177.1
+                  ansible_host: 192.168.0.18
                   
             DOMAIN_B_L3_LEAVES:
               hosts:
                 B-LEAF1:
-                  ansible_host: 10.18.177.4
+                  ansible_host: 192.168.0.111
                 B-LEAF2:
-                  ansible_host: 10.18.177.135
+                  ansible_host: 192.168.0.112
                 B-LEAF3:
-                  ansible_host: 10.18.177.7
+                  ansible_host: 192.168.0.113
                 B-LEAF4:
-                  ansible_host: 10.18.177.158
+                  ansible_host: 192.168.0.114
                 B-LEAF5:
-                  ansible_host: 10.18.177.170
+                  ansible_host: 192.168.0.115
                 B-LEAF6:
-                  ansible_host: 10.18.177.50
+                  ansible_host: 192.168.0.116
                   
             DOMAIN_B_EVPNGW:
               hosts:
                 B-LEAF7:
-                  ansible_host: 10.18.177.122
+                  ansible_host: 192.168.0.117
                 B-LEAF8:
-                  ansible_host: 10.18.177.53
+                  ansible_host: 192.168.0.118
                   
             DOMAIN_B_L2_SW:
               hosts:
                 B-SW1:
-                  ansible_host: 10.18.177.125
+                  ansible_host: 192.168.0.119
                   
         DOMAIN_C:
           children:
             DOMAIN_C_SPINES:
               hosts:
                 C-SPINE1:
-                  ansible_host: 10.18.177.154
+                  ansible_host: 192.168.0.19
                 C-SPINE2:
-                  ansible_host: 10.18.177.141
+                  ansible_host: 192.168.0.20
                   
             DOMAIN_C_L3_LEAVES:
               hosts:
                 C-LEAF1:
-                  ansible_host: 10.18.177.131
+                  ansible_host: 192.168.0.121
                 C-LEAF2:
-                  ansible_host: 10.18.177.161
+                  ansible_host: 192.168.0.122
                 C-LEAF3:
-                  ansible_host: 10.18.177.143
+                  ansible_host: 192.168.0.123
                 C-LEAF4:
-                  ansible_host: 10.18.177.137
+                  ansible_host: 192.168.0.124
                 C-LEAF5:
-                  ansible_host: 10.18.177.46
+                  ansible_host: 192.168.0.125
                 C-LEAF6:
-                  ansible_host: 10.18.177.94
+                  ansible_host: 192.168.0.126
 
             DOMAIN_C_EVPNGW:
               hosts:
                 C-LEAF7:
-                  ansible_host: 10.18.177.51
+                  ansible_host: 192.168.0.127
                 C-LEAF8:
-                  ansible_host: 10.18.177.124
+                  ansible_host: 192.168.0.128
 
         DOMAIN_D:
           children:
             DOMAIN_D_SPINES:
               hosts:
                 D-SPINE1:
-                  ansible_host: 10.18.177.136
+                  ansible_host: 192.168.0.21
                 D-SPINE2:
-                  ansible_host: 10.18.177.127
+                  ansible_host: 192.168.0.22
                 D-SPINE3:
-                  ansible_host: 10.18.177.157
+                  ansible_host: 192.168.0.23
                 D-SPINE4:
-                  ansible_host: 10.18.177.58
+                  ansible_host: 192.168.0.24
 
             DOMAIN_D_L3_LEAVES:
               hosts:
                 D-LEAF1:
-                  ansible_host: 10.18.177.43
+                  ansible_host: 192.168.0.129
                 D-LEAF2:
-                  ansible_host: 10.18.177.44
+                  ansible_host: 192.168.0.130
                 D-LEAF3:
-                  ansible_host: 10.18.177.48
+                  ansible_host: 192.168.0.131
                 D-LEAF4:
-                  ansible_host: 10.18.177.129
+                  ansible_host: 192.168.0.132
                 D-LEAF5:
-                  ansible_host: 10.18.177.163 
+                  ansible_host: 192.168.0.133
                 D-LEAF6:
-                  ansible_host: 10.18.177.168
+                  ansible_host: 192.168.0.134
 
             DOMAIN_D_EVPNGW:
               hosts:
                 D-LEAF7:
-                  ansible_host: 10.18.177.140
+                  ansible_host: 192.168.0.135
                 D-LEAF8:
-                  ansible_host: 10.18.177.16
+                  ansible_host: 192.168.0.136
 
         BACKBONE:
           hosts:
             BB1:
-              ansible_host: 10.18.177.3
+              ansible_host: 192.168.0.9
             BB2:
-              ansible_host: 10.18.177.130
+              ansible_host: 192.168.0.10
 
     NETWORK_SERVICES:
       children:
