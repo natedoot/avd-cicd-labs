@@ -22,14 +22,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install Ansible and AVD roles
         run: |
           pip install "pyavd[ansible]"
@@ -61,14 +53,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install Ansible and AVD roles
         run: |
           pip install "pyavd[ansible]"
@@ -77,6 +61,7 @@ jobs:
       - name: Deploy to CV
         env:  # Set environment variables here
           CV_SVC_TOKEN: ${{ secrets.CV_SVC_TOKEN }}
+          BUILD_BRANCH: ${{ github.ref_name }}
         run: |
           cd tech-library/datacenter/
           make avd-deploy

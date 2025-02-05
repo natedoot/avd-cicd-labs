@@ -5,7 +5,9 @@ help: ## Display help message
 .PHONY: avd-deploy
 avd-deploy: ## Deploy configurations to CV
 	ansible-playbook playbooks/deploy.yml -i inventory.yml \
-		-e cv_token=$(CV_SVC_TOKEN)
+		-e cv_token=$(CV_SVC_TOKEN) \
+		-e cv_change_control_name="Github Build & Deploy CC" \
+		-e cv_change_control_description=$(BUILD_DESCRIPTION)
 
 .PHONY: avd-build
 avd-build: ## Build configurations using AVD
