@@ -1,0 +1,44 @@
+name: Open PR for validated branch
+
+on:
+  workflow_run:
+    workflows: ["Validate and Merge Network Configurations"]
+    types:
+      - completed
+
+permissions:
+  issues: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  pr-open:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout the Main Branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Fetch Feature Branch
+        run: |
+          # Fetch the feature branch to ensure it is available for the PR
+          git fetch origin ${{ github.event.workflow_run.head_branch }}
+
+      - name: Create Pull Request Body File
+        run: |
+          # Create a body file for the pull request
+          echo "Validation was successful for the branch: ${{ github.event.workflow_run.head_branch }}." > /tmp/pr_body.txt
+          echo "All checks passed, and the branch is ready to merge." >> /tmp/pr_body.txt
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh pr create \
+            --head ${{ github.event.workflow_run.head_branch }} \
+            --base main \
+            --title "Validation Successful for ${{ github.event.workflow_run.head_branch }}" \
+            --body-file /tmp/pr_body.txt \
+            --label "validation-success"

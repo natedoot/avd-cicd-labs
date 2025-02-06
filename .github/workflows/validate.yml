@@ -74,3 +74,12 @@ jobs:
           grep ",FAIL," FABRIC-state.csv >> issue_body.txt
           gh issue create --title "Validation Failure in ${{ github.event.inputs.environment }}" \
                           --body-file issue_body.txt
+      
+      - name: Build and Deploy Configs on Failure
+        if: failure()
+        run: |
+          git fetch origin main
+          git checkout main
+          cd tech-library/datacenter
+          make avd-build
+          make avd-deploy-rcc
