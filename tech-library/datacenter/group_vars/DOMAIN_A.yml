@@ -24,7 +24,7 @@ bgp_peer_groups:
         replace_as: true
       bfd: false
 
-#default_vrf_diag_loopback_description: "Per-VRF Unique Loopback"
+default_vrf_diag_loopback_description: "Per-VRF Unique Loopback"
 vtep_loopback_description: "VTEP IP"
 
 spine:
