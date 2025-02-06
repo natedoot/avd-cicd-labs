@@ -61,7 +61,7 @@ jobs:
       - name: Deploy to CV
         env:  # Set environment variables here
           CV_SVC_TOKEN: ${{ secrets.CV_SVC_TOKEN }}
-          BUILD_BRANCH: ${{ github.ref_name }}
+          BUILD_DESCRIPTION: ${{ github.ref_name }}
         run: |
           cd tech-library/datacenter/
           make avd-deploy
