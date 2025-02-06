@@ -1,6 +1,6 @@
 ---
 - name: Validate Network State
-  hosts: FABRIC
+  hosts: DOMAIN_A
   connection: httpapi
   gather_facts: false
 
