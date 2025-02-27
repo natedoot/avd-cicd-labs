@@ -19,10 +19,13 @@
         <hr>
 
         <h3>Version Control</h3>
-        <p>Automatic commits occur when forms are submitted. Click below to push changes to GitHub.</p>
+        <p>
+            Automatic commits occur when forms are submitted.
+            Click below to create a **new branch** and push changes to GitHub.
+        </p>
 
         <form action="{{ url_for('push_remote') }}" method="post">
-            <button type="submit" class="btn btn-success">Push to Remote</button>
+            <button type="submit" class="btn btn-success">Push to New Branch</button>
         </form>
 
         {% with messages = get_flashed_messages(with_categories=true) %}

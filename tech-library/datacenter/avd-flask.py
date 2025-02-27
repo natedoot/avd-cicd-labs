@@ -7,8 +7,8 @@ import datetime
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Needed for flash messages
 
-MASTER_YAML_FILE = "group_vars/NETWORK_SERVICES.yml"
-CONNECTED_ENDPOINTS_FILE = "group_vars/CONNECTED_ENDPOINTS.yml"
+MASTER_YAML_FILE = "tech-library/datacenter/group_vars/NETWORK_SERVICES.yml"
+CONNECTED_ENDPOINTS_FILE = "tech-library/datacenter/group_vars/CONNECTED_ENDPOINTS.yml"
 REPO_PATH = "/workspaces/avd-cicd-labs"
 
 def load_yaml(file_path):
@@ -39,10 +39,20 @@ def commit_changes(file_path):
         flash(f"Git commit failed: {str(e)}", "danger")
 
 def push_to_remote():
-    """Pushes committed changes to the remote repository manually."""
+    """Creates a new branch and pushes committed changes to the remote repository."""
     try:
-        subprocess.run(["git", "-C", REPO_PATH, "push", "origin", "main"], check=True)  # Adjust branch if needed
-        flash("Changes pushed to remote repository successfully.", "success")
+        # Generate a unique branch name based on timestamp
+        timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        branch_name = f"changes-{timestamp}"
+
+        # Create a new branch
+        subprocess.run(["git", "-C", REPO_PATH, "checkout", "-b", branch_name], check=True)
+        
+        # Push the new branch to GitHub
+        subprocess.run(["git", "-C", REPO_PATH, "push", "origin", branch_name], check=True)
+
+        flash(f"Changes pushed to remote branch {branch_name}.", "success")
+    
     except subprocess.CalledProcessError as e:
         flash(f"Git push failed: {str(e)}", "danger")
 
