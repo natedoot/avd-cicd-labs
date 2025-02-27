@@ -70,6 +70,10 @@ tenants:
     - id: 80
       name: Black
       profile: VLAN80
+    - id: 55
+      name: DEV_VLAN55
+      ip_address: 10.10.55.1/24
+      enabled: true
 - name: Prod
   mac_vrf_vni_base: 10000
   evpn_l3_multicast:
