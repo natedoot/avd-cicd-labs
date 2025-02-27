@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected Endpoints Entry</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Connected Endpoints Entry</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Server Name</label>
+                <input type="text" class="form-control" name="server_name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Endpoint Ports (comma-separated)</label>
+                <input type="text" class="form-control" name="endpoint_ports" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Switch Ports (comma-separated)</label>
+                <input type="text" class="form-control" name="switch_ports" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Switches (comma-separated)</label>
+                <input type="text" class="form-control" name="switches" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">VLANs</label>
+                <input type="text" class="form-control" name="vlans" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Native VLAN</label>
+                <input type="number" class="form-control" name="native_vlan" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mode</label>
+                <select class="form-control" name="mode" required>
+                    <option value="trunk">Trunk</option>
+                    <option value="access">Access</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Spanning Tree Portfast</label>
+                <select class="form-control" name="portfast" required>
+                    <option value="edge">Edge</option>
+                    <option value="network">Network</option>
+                    <option value="disable">Disable</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Port-Channel Description (Optional)</label>
+                <input type="text" class="form-control" name="port_channel_desc">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Port-Channel Mode (Optional)</label>
+                <select class="form-control" name="port_channel_mode">
+                    <option value="">None</option>
+                    <option value="active">Active</option>
+                    <option value="passive">Passive</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
