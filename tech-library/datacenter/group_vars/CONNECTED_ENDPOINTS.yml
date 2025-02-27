@@ -1,316 +1,421 @@
----
-
 port_profiles:
-  - profile: DEFAULT
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-  - profile: PROF-BLUE-MLAG
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-    vlans: 10
-    port_channel:
-      mode: active
-
-  - profile: PROF-ORANGE-MLAG
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-    vlans: 30
-    port_channel:
-      mode: active
-
-  - profile: PROF-ORANGE-SINGLE-HOMED
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-    vlans: 30
-
-  - profile: PROF-YELLOW-SINGLE-HOMED
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-    vlans: 50
-
-  - profile: PROF-BROWN-MLAG
-    mode: access
-    spanning_tree_portfast: edge
-    spanning_tree_bpduguard: true
-    vlans: 70
-    port_channel:
-      mode: active
-
+- profile: DEFAULT
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+- profile: PROF-BLUE-MLAG
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+  vlans: 10
+  port_channel:
+    mode: active
+- profile: PROF-ORANGE-MLAG
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+  vlans: 30
+  port_channel:
+    mode: active
+- profile: PROF-ORANGE-SINGLE-HOMED
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+  vlans: 30
+- profile: PROF-YELLOW-SINGLE-HOMED
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+  vlans: 50
+- profile: PROF-BROWN-MLAG
+  mode: access
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: true
+  vlans: 70
+  port_channel:
+    mode: active
 servers:
-  - name: HostA1
-    adapters:
-      - endpoint_ports: [eth1, eth2]
-        switch_ports: [Ethernet7, Ethernet7]
-        switches: [A-LEAF1, A-LEAF2]
-        profile: PROF-BLUE-MLAG
-
-  - name: HostA2
-    adapters:
-      - endpoint_ports: [eth1, eth2]
-        switch_ports: [Ethernet8, Ethernet8]
-        switches: [A-LEAF1, A-LEAF2]
-        profile: PROF-ORANGE-MLAG
-
-  - name: HostA3
-    adapters:
-      - endpoint_ports: [eth1]
-        switch_ports: [Ethernet7]
-        switches: [A-LEAF3]
-        profile: PROF-YELLOW-SINGLE-HOMED
-
-  - name: HostA4
-    adapters:
-      - endpoint_ports: [eth1, eth2]
-        switch_ports: [Ethernet8, Ethernet8]
-        switches: [A-LEAF3, A-LEAF4]
-        profile: PROF-BLUE-MLAG
-
-  - name: HostA5
-    adapters:
-      - endpoint_ports: [eth1]
-        switch_ports: [Ethernet7]
-        switches: [A-LEAF4]
-        profile: PROF-ORANGE-SINGLE-HOMED
-
-  - name: HostA6
-    adapters:
-      - endpoint_ports: [eth1, eth2]
-        switch_ports: [Ethernet7, Ethernet7]
-        switches: [A-LEAF5, A-LEAF6]
-        profile: PROF-BROWN-MLAG
-          
-  - name: B1
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet7, Ethernet7 ]
-        switches: [ B-LEAF1, B-LEAF2 ]
-        profile: DEFAULT
-        vlans: 20
-        link_tracking:
-          enabled: true
-          name: CORE-LINKS
-        port_channel:
-          description: HostG
-          mode: active
-        ethernet_segment:
-          short_esi: 0001:0002:0007
-
-  - name: HostH
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ B-LEAF1, B-LEAF2 ]
-        profile: DEFAULT
-        vlans: 40
-        link_tracking:
-          enabled: true
-          name: CORE-LINKS
-        port_channel:
-          description: HostH
-          mode: active
-        ethernet_segment:
-          short_esi: 0001:0002:0008
-
-  - name: HostI
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ B-LEAF3 ]
-        profile: DEFAULT
-        vlans: 60
-        description: HostI
-  
-  - name: HostJ
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ B-LEAF3, B-LEAF4 ]
-        profile: DEFAULT
-        vlans: 10
-        link_tracking:
-          enabled: true
-          name: CORE-LINKS
-        ethernet_segment:
-          short_esi: 0003:0004:0008
-        port_channel:
-          description: HostJ
-          mode: active
-
-  - name: HostK
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ B-LEAF4 ]
-        profile: DEFAULT
-        vlans: 70
-        description: HostK
-
-  - name: HostL
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet3 ]
-        switches: [ B-SW1 ]
-        profile: DEFAULT
-        vlans: 40
-        description: HostL
-    
-  - name: HostM
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet4 ]
-        switches: [ B-SW1 ]
-        profile: DEFAULT
-        vlans: 80
-        description: HostM
-
-  - name: HostN
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet7, Ethernet7 ]
-        switches: [ C-LEAF1, C-LEAF2 ]
-        vlans: 10
-        profile: DEFAULT
-        port_channel:
-          description: HostN
-          mode: active
-
-  - name: HostO
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ C-LEAF3 ]
-        vlans: 20
-        profile: DEFAULT
-        description: HostO
-
-  - name: HostP
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ C-LEAF3, C-LEAF4 ]
-        vlans: 60
-        profile: DEFAULT
-        port_channel:
-          description: HostP
-          mode: active
-
-  - name: HostQ
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ C-LEAF4 ]
-        vlans: 50
-        profile: DEFAULT
-        description: HostQ
-
-  - name: HostR
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet7, Ethernet7 ]
-        switches: [ C-LEAF5, C-LEAF6 ]
-        vlans: 20
-        profile: DEFAULT
-        port_channel:
-          description: HostR
-          mode: active
-  
-  - name: HostS
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ C-LEAF5, C-LEAF6 ]
-        vlans: 60
-        profile: DEFAULT
-        port_channel:
-          description: HostS
-          mode: active
-
-  - name: D1
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet7, Ethernet7 ]
-        switches: [ D-LEAF1, D-LEAF2 ]
-        vlans: 10
-        profile: DEFAULT
-        port_channel:
-          description: D1
-          mode: active
-
-  - name: D2
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ D-LEAF1, D-LEAF2 ]
-        vlans: 90
-        profile: DEFAULT
-        port_channel:
-          description: D2
-          mode: active
-
-  - name: D3
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ D-LEAF3 ]
-        vlans: 50
-        profile: DEFAULT
-        description: D3
-
-  - name: D4
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet8, Ethernet8 ]
-        switches: [ D-LEAF3, D-LEAF4 ]
-        vlans: 10
-        profile: DEFAULT
-        port_channel:
-          description: D4
-          mode: active
-        
-  - name: D5
-    adapters:
-      - endpoint_ports: [ Ethernet1 ]
-        switch_ports: [ Ethernet7 ]
-        switches: [ D-LEAF4 ]
-        vlans: 90
-        profile: DEFAULT
-        description: D5
-
-  - name: D6
-    adapters:
-      - endpoint_ports: [ Ethernet1, Ethernet2 ]
-        switch_ports: [ Ethernet7, Ethernet7 ]
-        switches: [ D-LEAF5, D-LEAF6 ]
-        vlans: 70
-        profile: DEFAULT
-        port_channel:
-          description: D6
-          mode: active
-
-network_ports:
-  - switches:
-      - B-LEAF5
-      - B-LEAF6
+- name: HostA1
+  adapters:
+  - endpoint_ports:
+    - eth1
+    - eth2
     switch_ports:
-      - Ethernet7
-    enabled: true
-    mode: trunk
-    vlans: "40,80"
-    spanning_tree_portfast: edge
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - A-LEAF1
+    - A-LEAF2
+    profile: PROF-BLUE-MLAG
+- name: HostA2
+  adapters:
+  - endpoint_ports:
+    - eth1
+    - eth2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - A-LEAF1
+    - A-LEAF2
+    profile: PROF-ORANGE-MLAG
+- name: HostA3
+  adapters:
+  - endpoint_ports:
+    - eth1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - A-LEAF3
+    profile: PROF-YELLOW-SINGLE-HOMED
+- name: HostA4
+  adapters:
+  - endpoint_ports:
+    - eth1
+    - eth2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - A-LEAF3
+    - A-LEAF4
+    profile: PROF-BLUE-MLAG
+- name: HostA5
+  adapters:
+  - endpoint_ports:
+    - eth1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - A-LEAF4
+    profile: PROF-ORANGE-SINGLE-HOMED
+- name: HostA6
+  adapters:
+  - endpoint_ports:
+    - eth1
+    - eth2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - A-LEAF5
+    - A-LEAF6
+    profile: PROF-BROWN-MLAG
+- name: B1
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - B-LEAF1
+    - B-LEAF2
+    profile: DEFAULT
+    vlans: 20
+    link_tracking:
+      enabled: true
+      name: CORE-LINKS
+    port_channel:
+      description: HostG
+      mode: active
+    ethernet_segment:
+      short_esi: 0001:0002:0007
+- name: HostH
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - B-LEAF1
+    - B-LEAF2
+    profile: DEFAULT
+    vlans: 40
+    link_tracking:
+      enabled: true
+      name: CORE-LINKS
+    port_channel:
+      description: HostH
+      mode: active
+    ethernet_segment:
+      short_esi: 0001:0002:0008
+- name: HostI
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - B-LEAF3
+    profile: DEFAULT
+    vlans: 60
+    description: HostI
+- name: HostJ
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - B-LEAF3
+    - B-LEAF4
+    profile: DEFAULT
+    vlans: 10
     link_tracking:
       enabled: true
       name: CORE-LINKS
     ethernet_segment:
-      short_esi: 0005:0006:0007
-      redundancy: single-active
-      designated_forwarder_algorithm: preference
-      designated_forwarder_preferences: 
-        - 2000
-        - 1000
-      dont_preempt: true
-    description: AA_TO_B-SW1
+      short_esi: 0003:0004:0008
+    port_channel:
+      description: HostJ
+      mode: active
+- name: HostK
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - B-LEAF4
+    profile: DEFAULT
+    vlans: 70
+    description: HostK
+- name: HostL
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet3
+    switches:
+    - B-SW1
+    profile: DEFAULT
+    vlans: 40
+    description: HostL
+- name: HostM
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet4
+    switches:
+    - B-SW1
+    profile: DEFAULT
+    vlans: 80
+    description: HostM
+- name: HostN
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - C-LEAF1
+    - C-LEAF2
+    vlans: 10
+    profile: DEFAULT
+    port_channel:
+      description: HostN
+      mode: active
+- name: HostO
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - C-LEAF3
+    vlans: 20
+    profile: DEFAULT
+    description: HostO
+- name: HostP
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - C-LEAF3
+    - C-LEAF4
+    vlans: 60
+    profile: DEFAULT
+    port_channel:
+      description: HostP
+      mode: active
+- name: HostQ
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - C-LEAF4
+    vlans: 50
+    profile: DEFAULT
+    description: HostQ
+- name: HostR
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - C-LEAF5
+    - C-LEAF6
+    vlans: 20
+    profile: DEFAULT
+    port_channel:
+      description: HostR
+      mode: active
+- name: HostS
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - C-LEAF5
+    - C-LEAF6
+    vlans: 60
+    profile: DEFAULT
+    port_channel:
+      description: HostS
+      mode: active
+- name: D1
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - D-LEAF1
+    - D-LEAF2
+    vlans: 10
+    profile: DEFAULT
+    port_channel:
+      description: D1
+      mode: active
+- name: D2
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - D-LEAF1
+    - D-LEAF2
+    vlans: 90
+    profile: DEFAULT
+    port_channel:
+      description: D2
+      mode: active
+- name: D3
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - D-LEAF3
+    vlans: 50
+    profile: DEFAULT
+    description: D3
+- name: D4
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet8
+    - Ethernet8
+    switches:
+    - D-LEAF3
+    - D-LEAF4
+    vlans: 10
+    profile: DEFAULT
+    port_channel:
+      description: D4
+      mode: active
+- name: D5
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet7
+    switches:
+    - D-LEAF4
+    vlans: 90
+    profile: DEFAULT
+    description: D5
+- name: D6
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet2
+    switch_ports:
+    - Ethernet7
+    - Ethernet7
+    switches:
+    - D-LEAF5
+    - D-LEAF6
+    vlans: 70
+    profile: DEFAULT
+    port_channel:
+      description: D6
+      mode: active
+- name: a-tesserver-1
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    - Ethernet1
+    switch_ports:
+    - Ethernet12
+    - Ethernet12
+    switches:
+    - A-LEAF3
+    - A-LEAF4
+    vlans: '55'
+    native_vlan: 4092
+    mode: trunk
+    spanning_tree_portfast: edge
+    port_channel:
+      mode: active
+network_ports:
+- switches:
+  - B-LEAF5
+  - B-LEAF6
+  switch_ports:
+  - Ethernet7
+  enabled: true
+  mode: trunk
+  vlans: 40,80
+  spanning_tree_portfast: edge
+  link_tracking:
+    enabled: true
+    name: CORE-LINKS
+  ethernet_segment:
+    short_esi: 0005:0006:0007
+    redundancy: single-active
+    designated_forwarder_algorithm: preference
+    designated_forwarder_preferences:
+    - 2000
+    - 1000
+    dont_preempt: true
+  description: AA_TO_B-SW1
