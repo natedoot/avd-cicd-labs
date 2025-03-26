@@ -4,3 +4,5 @@
 secrets.yml
 # ignore act files
 act/
+# ignore vault pw
+passwords.*
