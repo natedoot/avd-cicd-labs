@@ -14,7 +14,7 @@ port_profiles:
       mode: active
 
   - profile: PROF-ORANGE-MLAG
-    mode: access
+    mode: trunk
     spanning_tree_portfast: edge
     spanning_tree_bpduguard: true
     vlans: 30
