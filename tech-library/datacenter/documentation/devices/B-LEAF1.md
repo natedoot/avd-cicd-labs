@@ -40,6 +40,7 @@
   - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
+  - [Static Routes](#static-routes)
   - [ARP](#arp)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
@@ -654,6 +655,21 @@ ip routing vrf Prod
 | default | False |
 | default | false |
 | Prod | false |
+
+### Static Routes
+
+#### Static Routes Summary
+
+| VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
+| --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| deafult | 100.100.100.0/24 | 100.100.100.1 | - | 1 | - | - | - |
+
+#### Static Routes Device Configuration
+
+```eos
+!
+ip route vrf deafult 100.100.100.0/24 100.100.100.1
+```
 
 ### ARP
 

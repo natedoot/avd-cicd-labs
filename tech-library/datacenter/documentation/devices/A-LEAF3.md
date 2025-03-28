@@ -42,6 +42,7 @@
   - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
+  - [Static Routes](#static-routes)
   - [ARP](#arp)
   - [Router BGP](#router-bgp)
 - [BFD](#bfd)
@@ -466,7 +467,7 @@ interface Port-Channel1000
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | ROUTER_ID | default | 1.1.1.3/32 |
-| Loopback1 | VTEP IP | default | 2.2.1.3/32 |
+| Loopback1 | VXLAN_TUNNEL_SOURCE | default | 2.2.1.3/32 |
 | Loopback101 | Per-VRF Unique Loopback | Prod | 10.101.101.3/32 |
 | Loopback102 | Per-VRF Unique Loopback | Dev | 10.102.101.3/32 |
 
@@ -475,7 +476,7 @@ interface Port-Channel1000
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | ROUTER_ID | default | - |
-| Loopback1 | VTEP IP | default | - |
+| Loopback1 | VXLAN_TUNNEL_SOURCE | default | - |
 | Loopback101 | Per-VRF Unique Loopback | Prod | - |
 | Loopback102 | Per-VRF Unique Loopback | Dev | - |
 
@@ -489,7 +490,7 @@ interface Loopback0
    ip address 1.1.1.3/32
 !
 interface Loopback1
-   description VTEP IP
+   description VXLAN_TUNNEL_SOURCE
    no shutdown
    ip address 2.2.1.3/32
 !
@@ -679,6 +680,21 @@ ip routing vrf Prod
 | default | false |
 | Dev | false |
 | Prod | false |
+
+### Static Routes
+
+#### Static Routes Summary
+
+| VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
+| --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| deafult | 100.100.100.0/24 | 100.100.100.1 | - | 1 | - | - | - |
+
+#### Static Routes Device Configuration
+
+```eos
+!
+ip route vrf deafult 100.100.100.0/24 100.100.100.1
+```
 
 ### ARP
 

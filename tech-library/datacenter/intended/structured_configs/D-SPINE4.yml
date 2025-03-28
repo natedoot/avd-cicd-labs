@@ -1,0 +1,319 @@
+hostname: D-SPINE4
+is_deployed: true
+router_bgp:
+  as: '65400'
+  router_id: 1.1.4.204
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  peer_groups:
+  - name: LOCAL-UNDERLAY-PEERS
+    type: ipv4
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: LOCAL-UNDERLAY-PEERS
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv6:
+    peer_groups:
+    - name: LOCAL-UNDERLAY-PEERS
+      activate: true
+  neighbor_interfaces:
+  - name: Ethernet1
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65412'
+    peer: D-LEAF1
+    description: D-LEAF1_Ethernet4
+  - name: Ethernet2
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65412'
+    peer: D-LEAF2
+    description: D-LEAF2_Ethernet4
+  - name: Ethernet3
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65434'
+    peer: D-LEAF3
+    description: D-LEAF3_Ethernet4
+  - name: Ethernet4
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65434'
+    peer: D-LEAF4
+    description: D-LEAF4_Ethernet4
+  - name: Ethernet5
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65456'
+    peer: D-LEAF5
+    description: D-LEAF5_Ethernet4
+  - name: Ethernet6
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65456'
+    peer: D-LEAF6
+    description: D-LEAF6_Ethernet4
+  - name: Ethernet7
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65478'
+    peer: D-LEAF7
+    description: D-LEAF7_Ethernet4
+  - name: Ethernet8
+    peer_group: LOCAL-UNDERLAY-PEERS
+    remote_as: '65478'
+    peer: D-LEAF8
+    description: D-LEAF8_Ethernet4
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 2001:db8:d:1::1
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF1
+    description: D-LEAF1_Loopback0
+    remote_as: '65412'
+  - ip_address: 2001:db8:d:1::2
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF2
+    description: D-LEAF2_Loopback0
+    remote_as: '65412'
+  - ip_address: 2001:db8:d:1::3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF3
+    description: D-LEAF3_Loopback0
+    remote_as: '65434'
+  - ip_address: 2001:db8:d:1::4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF4
+    description: D-LEAF4_Loopback0
+    remote_as: '65434'
+  - ip_address: 2001:db8:d:1::5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF5
+    description: D-LEAF5_Loopback0
+    remote_as: '65456'
+  - ip_address: 2001:db8:d:1::6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF6
+    description: D-LEAF6_Loopback0
+    remote_as: '65456'
+  - ip_address: 1.1.4.7
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF7
+    description: D-LEAF7_Loopback0
+    remote_as: '65478'
+  - ip_address: 1.1.4.8
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: D-LEAF8
+    description: D-LEAF8_Loopback0
+    remote_as: '65478'
+service_routing_protocols_model: multi-agent
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+ip_name_servers:
+- ip_address: 10.255.0.2
+  vrf: default
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
+vrfs:
+- name: default
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.24/24
+  gateway: null
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet1
+  peer: D-LEAF1
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF1_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet2
+  peer: D-LEAF2
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF2_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet3
+  peer: D-LEAF3
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF3_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet4
+  peer: D-LEAF4
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF4_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet5
+  peer: D-LEAF5
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF5_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet6
+  peer: D-LEAF6
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF6_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ipv6_enable: true
+- name: Ethernet7
+  peer: D-LEAF7
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF7_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.54/31
+- name: Ethernet8
+  peer: D-LEAF8
+  peer_interface: Ethernet4
+  peer_type: l3leaf
+  description: P2P_D-LEAF8_Ethernet4
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ip_address: 192.168.1.62/31
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.1.4.204/32
+  ipv6_address: 2001:db8:d:1::cc/128
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 1.1.4.0/24 eq 32
+ipv6_prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY-V6
+  sequence_numbers:
+  - sequence: 10
+    action: permit 2001:db8:d:1::0/64 eq 128
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  - sequence: 30
+    type: permit
+    match:
+    - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+metadata:
+  platform: vEOS-lab
+  cv_tags:
+    device_tags:
+    - name: topology_hint_datacenter
+      value: domain-d
+    - name: topology_hint_fabric
+      value: FABRIC
+    - name: topology_hint_pod
+      value: pod-d
+aaa_authorization:
+  exec:
+    default: local
+arp:
+  aging:
+    timeout_default: 1500

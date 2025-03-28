@@ -43,6 +43,7 @@
   - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
+  - [Static Routes](#static-routes)
   - [ARP](#arp)
   - [Router OSPF](#router-ospf)
   - [Router BGP](#router-bgp)
@@ -360,6 +361,7 @@ vlan internal order ascending range 1006 1199
 | 60 | Red | - |
 | 70 | Brown | - |
 | 80 | Black | - |
+| 100 | PROD_VLAN100 | - |
 | 3001 | MLAG_L3_VRF_Prod | MLAG |
 | 3002 | MLAG_L3_VRF_Dev | MLAG |
 | 4093 | MLAG_L3 | MLAG |
@@ -392,6 +394,9 @@ vlan 70
 !
 vlan 80
    name Black
+!
+vlan 100
+   name PROD_VLAN100
 !
 vlan 3001
    name MLAG_L3_VRF_Prod
@@ -586,6 +591,7 @@ interface Loopback102
 | Vlan60 | Red | Dev | 9014 | False |
 | Vlan70 | Brown | Dev | 9014 | False |
 | Vlan80 | Black | Dev | 9014 | False |
+| Vlan100 | PROD_VLAN100 | Prod | - | False |
 | Vlan3001 | MLAG_L3_VRF_Prod | Prod | 9214 | False |
 | Vlan3002 | MLAG_L3_VRF_Dev | Dev | 9214 | False |
 | Vlan4093 | MLAG_L3 | default | 9214 | False |
@@ -603,6 +609,7 @@ interface Loopback102
 | Vlan60 |  Dev  |  -  |  10.60.60.1/24  |  -  |  -  |  -  |
 | Vlan70 |  Dev  |  -  |  10.70.70.1/24  |  -  |  -  |  -  |
 | Vlan80 |  Dev  |  -  |  10.80.80.1/24  |  -  |  -  |  -  |
+| Vlan100 |  Prod  |  10.10.100.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3001 |  Prod  |  192.0.0.0/31  |  -  |  -  |  -  |  -  |
 | Vlan3002 |  Dev  |  192.0.0.0/31  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  192.0.0.0/31  |  -  |  -  |  -  |  -  |
@@ -668,6 +675,12 @@ interface Vlan80
    vrf Dev
    ip address virtual 10.80.80.1/24
 !
+interface Vlan100
+   description PROD_VLAN100
+   no shutdown
+   vrf Prod
+   ip address 10.10.100.1/24
+!
 interface Vlan3001
    description MLAG_L3_VRF_Prod
    no shutdown
@@ -720,6 +733,7 @@ interface Vlan4094
 | 60 | 10060 | - | - |
 | 70 | 10070 | - | - |
 | 80 | 10080 | - | - |
+| 100 | 10100 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -745,6 +759,7 @@ interface Vxlan1
    vxlan vlan 60 vni 10060
    vxlan vlan 70 vni 10070
    vxlan vlan 80 vni 10080
+   vxlan vlan 100 vni 10100
    vxlan vrf Dev vni 50002
    vxlan vrf Prod vni 50001
 ```
@@ -802,6 +817,21 @@ ip routing vrf Prod
 | default | false |
 | Dev | false |
 | Prod | false |
+
+### Static Routes
+
+#### Static Routes Summary
+
+| VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
+| --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| deafult | 100.100.100.0/24 | 100.100.100.1 | - | 1 | - | - | - |
+
+#### Static Routes Device Configuration
+
+```eos
+!
+ip route vrf deafult 100.100.100.0/24 100.100.100.1
+```
 
 ### ARP
 
@@ -951,6 +981,7 @@ ASN Notation: asplain
 | 60 | 1.1.3.7:10060 | 10060:10060<br>remote 10060:10060 | - | - | learned |
 | 70 | 1.1.3.7:10070 | 10070:10070<br>remote 10070:10070 | - | - | learned |
 | 80 | 1.1.3.7:10080 | 10080:10080<br>remote 10080:10080 | - | - | learned |
+| 100 | 1.1.3.7:10100 | 10100:10100<br>remote 10100:10100 | - | - | learned |
 
 #### Router BGP VRFs
 
@@ -1063,6 +1094,13 @@ router bgp 65378
       rd evpn domain remote 1.1.3.7:10080
       route-target both 10080:10080
       route-target import export evpn domain remote 10080:10080
+      redistribute learned
+   !
+   vlan 100
+      rd 1.1.3.7:10100
+      rd evpn domain remote 1.1.3.7:10100
+      route-target both 10100:10100
+      route-target import export evpn domain remote 10100:10100
       redistribute learned
    !
    address-family evpn

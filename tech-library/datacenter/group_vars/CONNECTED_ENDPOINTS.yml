@@ -1,6 +1,12 @@
 ---
 
 port_profiles:
+  - profile: PC-PROFILE-A
+    port_channel:
+      channel_id: 100
+  - profile: PC-PROFILE-B
+    port_channel:
+      channel_id: 200
   - profile: DEFAULT
     mode: access
     spanning_tree_portfast: edge
@@ -39,7 +45,8 @@ port_profiles:
     spanning_tree_bpduguard: true
     vlans: 70
     port_channel:
-      mode: active
+      mode: active  
+
 
 servers:
   - name: HostA1
@@ -291,8 +298,52 @@ servers:
         port_channel:
           description: D6
           mode: active
+  # - name: Test-Port-Channel
+  #   adapters:
+  #     - endpoint_ports: [Ethernet9, Ethernet10]
+  #       switch_ports: [ Ethernet9, Ethernet10]
+  #       switches: [A-LEAF5, A-LEAF6]
+  #       profile: DEFAULT
+  #       port_channel:
+  #         mode: active
+  # - name: Test-Port-Channel-Failboat
+  #   adapters:
+  #     - endpoint_ports: [Ethernet11, Ethernet12]
+  #       switch_ports: [Ethernet11, Ethernet12]
+  #       switches: [A-LEAF5, A-LEAF6]
+  #       profile: DEFAULT
+  #       port_channel:
+  #         mode: active
+  #         channel_id: 9
+  # - name: TestPC-2
+  #   adapters:
+  #     - endpoint_ports: [Ethernet11, Ethernet12]
+  #       switch_ports: [ Ethernet11, Ethernet12]
+  #       switches: [A-LEAF5, A-LEAF6]
+  #       port_channel:
+  #         mode: active
+  #         channel_id: 400
 
 network_ports:
+  - switches:
+      - A-LEAF5
+      - A-LEAF6
+    switch_ports:
+      - Ethernet9
+      - Ethernet10
+    description: Multiple interfaces in the same port-channel
+    port_channel:
+      mode: active
+    profile: PC-PROFILE-A
+  - switches:
+      - A-LEAF5
+      - A-LEAF6
+    switch_ports:
+      - Ethernet13
+      - Ethernet14
+    port_channel:
+      mode: active
+    profile: PC-PROFILE-B
   - switches:
       - B-LEAF5
       - B-LEAF6

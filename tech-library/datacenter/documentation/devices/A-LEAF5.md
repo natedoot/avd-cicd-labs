@@ -42,6 +42,7 @@
   - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
+  - [Static Routes](#static-routes)
   - [ARP](#arp)
   - [Router BGP](#router-bgp)
 - [BFD](#bfd)
@@ -341,6 +342,10 @@ mac address-table aging-time 1800
 | Ethernet5 | MLAG_A-LEAF6_Ethernet5 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet6 | MLAG_A-LEAF6_Ethernet6 | *trunk | *- | *- | *MLAG | 1000 |
 | Ethernet7 | SERVER_HostA6_eth1 | *access | *70 | *- | *- | 7 |
+| Ethernet9 | Multiple interfaces in the same port-channel | *- | *- | *- | *- | 100 |
+| Ethernet10 | Multiple interfaces in the same port-channel | *- | *- | *- | *- | 100 |
+| Ethernet13 | - | *- | *- | *- | *- | 200 |
+| Ethernet14 | - | *- | *- | *- | *- | 200 |
 
 *Inherited from Port-Channel Interface
 
@@ -399,6 +404,24 @@ interface Ethernet7
    description SERVER_HostA6_eth1
    no shutdown
    channel-group 7 mode active
+!
+interface Ethernet9
+   description Multiple interfaces in the same port-channel
+   no shutdown
+   channel-group 100 mode active
+!
+interface Ethernet10
+   description Multiple interfaces in the same port-channel
+   no shutdown
+   channel-group 100 mode active
+!
+interface Ethernet13
+   no shutdown
+   channel-group 200 mode active
+!
+interface Ethernet14
+   no shutdown
+   channel-group 200 mode active
 ```
 
 ### Port-Channel Interfaces
@@ -410,6 +433,8 @@ interface Ethernet7
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel7 | SERVER_HostA6 | access | 70 | - | - | - | - | 7 | - |
+| Port-Channel100 | - | - | - | - | - | - | - | 100 | - |
+| Port-Channel200 | - | - | - | - | - | - | - | 200 | - |
 | Port-Channel1000 | MLAG_A-LEAF6_Port-Channel1000 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -425,6 +450,16 @@ interface Port-Channel7
    mlag 7
    spanning-tree portfast
    spanning-tree bpduguard enable
+!
+interface Port-Channel100
+   no shutdown
+   switchport
+   mlag 100
+!
+interface Port-Channel200
+   no shutdown
+   switchport
+   mlag 200
 !
 interface Port-Channel1000
    description MLAG_A-LEAF6_Port-Channel1000
@@ -443,7 +478,7 @@ interface Port-Channel1000
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | ROUTER_ID | default | 1.1.1.5/32 |
-| Loopback1 | VTEP IP | default | 2.2.1.5/32 |
+| Loopback1 | VXLAN_TUNNEL_SOURCE | default | 2.2.1.5/32 |
 | Loopback102 | Per-VRF Unique Loopback | Dev | 10.102.101.5/32 |
 
 ##### IPv6
@@ -451,7 +486,7 @@ interface Port-Channel1000
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | ROUTER_ID | default | - |
-| Loopback1 | VTEP IP | default | - |
+| Loopback1 | VXLAN_TUNNEL_SOURCE | default | - |
 | Loopback102 | Per-VRF Unique Loopback | Dev | - |
 
 #### Loopback Interfaces Device Configuration
@@ -464,7 +499,7 @@ interface Loopback0
    ip address 1.1.1.5/32
 !
 interface Loopback1
-   description VTEP IP
+   description VXLAN_TUNNEL_SOURCE
    no shutdown
    ip address 2.2.1.5/32
 !
@@ -612,6 +647,21 @@ ip routing vrf Dev
 | default | False |
 | default | false |
 | Dev | false |
+
+### Static Routes
+
+#### Static Routes Summary
+
+| VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
+| --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| deafult | 100.100.100.0/24 | 100.100.100.1 | - | 1 | - | - | - |
+
+#### Static Routes Device Configuration
+
+```eos
+!
+ip route vrf deafult 100.100.100.0/24 100.100.100.1
+```
 
 ### ARP
 

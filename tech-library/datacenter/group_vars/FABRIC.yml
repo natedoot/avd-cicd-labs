@@ -115,3 +115,8 @@ mac_address_table:
 custom_structured_configuration_arp:
   aging:
     timeout_default: 1500
+
+static_routes:
+  - vrf: "deafult"
+    destination_address_prefix: 100.100.100.0/24
+    gateway: 100.100.100.1
