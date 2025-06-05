@@ -72,6 +72,8 @@ tenants:
       profile: VLAN80
 - name: Prod
   mac_vrf_vni_base: 10000
+  evpn_l2_multicast:
+    enabled: true
   evpn_l3_multicast:
     enabled: true
     evpn_underlay_l3_multicast_group_ipv4_pool: 232.1.1.1/24
@@ -92,7 +94,7 @@ tenants:
     mlag_ibgp_peering_vlan: 3001
     redistribute_mlag_ibgp_peering_vrfs: false
     svis:
-    - id: 10
+    - id: 11
       name: Blue
       profile: VLAN10
     - id: 20
