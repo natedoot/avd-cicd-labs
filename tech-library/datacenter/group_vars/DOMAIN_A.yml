@@ -154,7 +154,7 @@ l3leaf:
           enabled: true
         evpn_l3:
           enabled: true
-          inter_domain: true
+          #inter_domain: true
         remote_peers:
           - hostname: BB1
             bgp_as: 65500

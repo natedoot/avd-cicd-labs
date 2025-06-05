@@ -1,7 +1,7 @@
 ---
 
 - name: Build Switch configuration
-  hosts: FABRIC
+  hosts: DOMAIN_A
   connection: local
   gather_facts: false
   collections:

@@ -397,25 +397,45 @@ servers:
     spanning_tree_portfast: edge
     port_channel:
       mode: active
-network_ports:
-- switches:
-  - B-LEAF5
-  - B-LEAF6
-  switch_ports:
-  - Ethernet7
-  enabled: true
-  mode: trunk
-  vlans: 40,80
-  spanning_tree_portfast: edge
-  link_tracking:
-    enabled: true
-    name: CORE-LINKS
-  ethernet_segment:
-    short_esi: 0005:0006:0007
-    redundancy: single-active
-    designated_forwarder_algorithm: preference
-    designated_forwarder_preferences:
-    - 2000
-    - 1000
-    dont_preempt: true
-  description: AA_TO_B-SW1
+- name: B-SW1
+  adapters:
+    - endpoint_ports:
+      - Ethernet1
+      - Ethernet2
+      switch_ports:
+        - Ethernet7
+        - Ethernet7
+      switches:
+        - B-LEAF5
+        - B-LEAF6
+      ethernet_segment:
+        short_esi: 0005:0006:0007
+        redundancy: single-active
+        designated_forwarder_algorithm: preference
+        designated_forwarder_preferences:
+        - 2000
+        - 1000
+        dont_preempt: true
+# network_ports:
+#   - switches:
+#     - B-LEAF5
+#     - B-LEAF6
+#     switch_ports:
+#     - Ethernet7
+#     - Ethernet7
+#     enabled: true
+#     mode: trunk
+#     vlans: 40,80
+#     spanning_tree_portfast: edge
+#     link_tracking:
+#       enabled: true
+#       name: CORE-LINKS
+#     ethernet_segment:
+#       short_esi: 0005:0006:0007
+#       redundancy: single-active
+#       designated_forwarder_algorithm: preference
+#       designated_forwarder_preferences:
+#       - 2000
+#       - 1000
+#       dont_preempt: true
+#     description: AA_TO_B-SW1
