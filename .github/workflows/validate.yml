@@ -6,7 +6,7 @@ on:
       environment:
         description: "The branch to validate (for inventory selection)"
         required: true
-        default: "feature-branch"
+        default: "demo-branch"
 
 permissions:
   issues: write  # Grant permissions to create GitHub issues
@@ -34,7 +34,10 @@ jobs:
       - name: Install Ansible and AVD roles
         run: |
           pip install "pyavd[ansible]"
+          pip install "ansible-core==2.17.3"
           ansible-galaxy collection install arista.avd
+          ansible-galaxy collection install arista.eos:">=7.0.0"
+          ansible-galaxy collection install ansible.utils:">=3.0.0"
       
       - name: Rebuild structured config for validation
         run: |
