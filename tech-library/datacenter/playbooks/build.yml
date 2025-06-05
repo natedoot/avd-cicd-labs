@@ -6,7 +6,6 @@
   gather_facts: false
   collections:
     - arista.avd
-    - arista.cvp
 
   tasks:
 
