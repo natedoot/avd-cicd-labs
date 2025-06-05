@@ -25,6 +25,7 @@ jobs:
       - name: Install Ansible and AVD roles
         run: |
           pip install "pyavd[ansible]"
+          pip install "ansible-core==2.17.3"
           ansible-galaxy collection install arista.avd
 
       - name: Build Fabric Configs
@@ -56,6 +57,7 @@ jobs:
       - name: Install Ansible and AVD roles
         run: |
           pip install "pyavd[ansible]"
+          pip install "ansible-core==2.17.3"
           ansible-galaxy collection install arista.avd
 
       - name: Deploy to CV
