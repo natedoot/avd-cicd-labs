@@ -5,8 +5,8 @@ pod_name: pod-a
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp
 
-# underlay_multicast: true
-# evpn_multicast: true
+underlay_multicast: true
+evpn_multicast: true
 
 fabric_ip_addressing:
   mlag:
@@ -24,7 +24,72 @@ bgp_peer_groups:
         replace_as: true
       bfd: false
 
-default_vrf_diag_loopback_description: "Per-VRF Unique Loopback"
+custom_evpn_gw_bgp_config:
+  address_family_ipv4:
+    peer_groups:
+      - name: REMOTE-IPV4-PEERS
+        activate: true
+  address_family_evpn:
+    domain_identifier: '1:1'
+  bgp:
+    bestpath:
+      d_path: true
+  peer_groups:
+    - name: REMOTE-IPV4-PEERS
+      password: dkvBq1jk4inJHsHfMjYRnQ==
+      remote_as: 65000
+      route_map_out: RM-AS65000-IPV4-OUT
+      send_community: all
+    - name: REMOTE-EVPN-PEERS
+      local_as: 65000
+
+custom_evpn_gw_prefix_lists:
+  - name: PL-GATEWAY-LOOP
+    sequence_numbers:
+      - sequence: 10
+        action: permit 2.2.1.7/32
+      - sequence: 20
+        action: permit 1.1.1.7/32
+      - sequence: 30
+        action: permit 1.1.1.8/32
+
+custom_evpn_gw_route_maps:
+  - name: RM-MLAG-PEER-IN
+    sequence_numbers:
+      - sequence: 10
+        type: deny
+        match:
+          - extcommunity CL-EVPN-IMPORTED
+        description: Do not accept routes learned from MLAG peer that contain Route-Target extended communities
+      - sequence: 20
+        type: permit
+        set:
+          - origin incomplete
+        description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+  - name: RM-AS65000-IPV4-OUT
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        match:
+          - ip address prefix-list PL-GATEWAY-LOOP
+a_leaf7_dci_bgp_peers:
+  neighbors:
+    - ip_address: 172.16.1.0
+      peer_group: REMOTE-IPV4-PEERS
+      description: BB1.IPV4
+    - ip_address: 172.16.1.4
+      peer_group: REMOTE-IPV4-PEERS
+      description: BB2.IPV4
+
+a_leaf8_dci_bgp_peers:
+  neighbors:
+    - ip_address: 172.16.1.2
+      peer_group: REMOTE-IPV4-PEERS
+      description: BB1.IPV4
+    - ip_address: 172.16.1.6
+      peer_group: REMOTE-IPV4-PEERS
+      description: BB2.IPV4
+#default_vrf_diag_loopback_description: "Per-VRF Unique Loopback"
 #vtep_loopback_description: "VTEP IP"
 
 spine:
@@ -47,6 +112,9 @@ spine:
     - name: A-SPINE4
       id: 204
       mgmt_ip: 192.168.0.14/24
+    - name: A-SPINE5
+      id: 205
+      mgmt_ip: 192.168.0.15/24
 
 l3leaf:
   defaults:
@@ -54,8 +122,8 @@ l3leaf:
     loopback_ipv4_pool: 1.1.1.0/24
     loopback_ipv4_offset: 0
     vtep_loopback_ipv4_pool: 2.2.1.0/24 
-    uplink_interfaces: ['Ethernet1', 'Ethernet2', 'Ethernet3', 'Ethernet4'] 
-    uplink_switches: ['A-SPINE1', 'A-SPINE2', 'A-SPINE3', 'A-SPINE4']
+    uplink_interfaces: ['Ethernet1', 'Ethernet2', 'Ethernet3', 'Ethernet4', 'Ethernet20'] 
+    uplink_switches: ['A-SPINE1', 'A-SPINE2', 'A-SPINE3', 'A-SPINE4', 'A-SPINE5']
     uplink_ipv4_pool: 192.168.1.0/24
     mlag_interfaces: ['Ethernet5', 'Ethernet6']
     mlag_peer_vlan_structured_config: 
@@ -93,10 +161,12 @@ l3leaf:
             - Ethernet1
             - Ethernet1
             - Ethernet1
+            - Ethernet1
         - name: A-LEAF2
           id: 2
           mgmt_ip: 192.168.0.102/24
           uplink_switch_interfaces:
+            - Ethernet2
             - Ethernet2
             - Ethernet2
             - Ethernet2
@@ -114,10 +184,12 @@ l3leaf:
             - Ethernet3
             - Ethernet3
             - Ethernet3
+            - Ethernet3
         - name: A-LEAF4
           id: 4
           mgmt_ip: 192.168.0.104/24
           uplink_switch_interfaces:
+            - Ethernet4
             - Ethernet4
             - Ethernet4
             - Ethernet4
@@ -135,10 +207,12 @@ l3leaf:
             - Ethernet5
             - Ethernet5
             - Ethernet5
+            - Ethernet5
         - name: A-LEAF6
           id: 6
           mgmt_ip: 192.168.0.106/24
           uplink_switch_interfaces:
+            - Ethernet6
             - Ethernet6
             - Ethernet6
             - Ethernet6
@@ -162,6 +236,30 @@ l3leaf:
           - hostname: BB2
             bgp_as: 65500
             ip_address: 1.1.0.2
+        # all_active_multihoming:
+
+        # # Enable Active Active Multihoming resiliency model.
+        #   enabled: true
+
+        #   # Enable D-path for use with BGP bestpath selection algorithm.
+        #   enable_d_path: true
+
+        #   # ASN(asplain):local_admin or ASN(asdot):local_admin notation
+        #   evpn_domain_id_local: "2:2"
+
+        #   # ASN(asplain):local_admin or ASN(asdot):local_admin notation
+        #   evpn_domain_id_remote: "99:99"
+        #   evpn_ethernet_segment: # required
+
+        #     # EVPN Ethernet Segment Identifier (Type 1 format)
+        #     identifier: 0000:bbbb:0007:0008:0000
+
+        #     # Low-order 6 bytes of ES-Import Route Target.
+        #     rt_import: 00:bb:bb:07:08:00
+      structured_config:
+        router_bgp: "{{ custom_evpn_gw_bgp_config }}"
+        prefix_lists: "{{ custom_evpn_gw_prefix_lists }}"
+        route_maps: "{{ custom_evpn_gw_route_maps }}"
       nodes:
         - name: A-LEAF7
           id: 7
@@ -171,6 +269,9 @@ l3leaf:
             - Ethernet7
             - Ethernet7
             - Ethernet7
+            - Ethernet7
+          structured_config:
+            router_bgp: "{{ a_leaf7_dci_bgp_peers }}"
         - name: A-LEAF8
           id: 8
           mgmt_ip: 192.168.0.108/24
@@ -179,3 +280,6 @@ l3leaf:
             - Ethernet8
             - Ethernet8
             - Ethernet8
+            - Ethernet8
+          structured_config:
+            router_bgp: "{{ a_leaf8_dci_bgp_peers }}"

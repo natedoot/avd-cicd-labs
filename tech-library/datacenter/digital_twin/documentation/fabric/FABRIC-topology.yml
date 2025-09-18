@@ -1,0 +1,726 @@
+nodes:
+- A-LEAF1:
+    node_type: veos
+    ip_addr: 192.168.0.101/24
+    version: 4.33.1.1F
+- A-LEAF2:
+    node_type: veos
+    ip_addr: 192.168.0.102/24
+    version: 4.33.1.1F
+- A-LEAF3:
+    node_type: veos
+    ip_addr: 192.168.0.103/24
+    version: 4.33.1.1F
+- A-LEAF4:
+    node_type: veos
+    ip_addr: 192.168.0.104/24
+    version: 4.33.1.1F
+- A-LEAF5:
+    node_type: veos
+    ip_addr: 192.168.0.105/24
+    version: 4.33.1.1F
+- A-LEAF6:
+    node_type: veos
+    ip_addr: 192.168.0.106/24
+    version: 4.33.1.1F
+- A-LEAF7:
+    node_type: veos
+    ip_addr: 192.168.0.107/24
+    version: 4.33.1.1F
+- A-LEAF8:
+    node_type: veos
+    ip_addr: 192.168.0.108/24
+    version: 4.33.1.1F
+- A-SPINE1:
+    node_type: veos
+    ip_addr: 192.168.0.11/24
+    version: 4.33.1.1F
+- A-SPINE2:
+    node_type: veos
+    ip_addr: 192.168.0.12/24
+    version: 4.33.1.1F
+- A-SPINE3:
+    node_type: veos
+    ip_addr: 192.168.0.13/24
+    version: 4.33.1.1F
+- A-SPINE4:
+    node_type: veos
+    ip_addr: 192.168.0.14/24
+    version: 4.33.1.1F
+- A-SPINE5:
+    node_type: veos
+    ip_addr: 192.168.0.15/24
+    version: 4.33.1.1F
+- B-LEAF1:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF2:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF3:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF4:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF5:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF6:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF7:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-LEAF8:
+    node_type: null
+    ip_addr: null
+    version: null
+- B-SPINE1:
+    node_type: veos
+    ip_addr: 192.168.0.15/24
+    version: 4.33.1.1F
+- B-SPINE2:
+    node_type: veos
+    ip_addr: 192.168.0.16/24
+    version: 4.33.1.1F
+- B-SPINE3:
+    node_type: veos
+    ip_addr: 192.168.0.17/24
+    version: 4.33.1.1F
+- B-SPINE4:
+    node_type: veos
+    ip_addr: 192.168.0.18/24
+    version: 4.33.1.1F
+- B-SW1:
+    node_type: veos
+    ip_addr: 192.168.0.119/24
+    version: 4.33.1.1F
+- BB1:
+    node_type: veos
+    ip_addr: 192.168.0.9/24
+    version: 4.33.1.1F
+- BB2:
+    node_type: veos
+    ip_addr: 192.168.0.10/24
+    version: 4.33.1.1F
+- C-LEAF1:
+    node_type: veos
+    ip_addr: 192.168.0.121/24
+    version: 4.33.1.1F
+- C-LEAF2:
+    node_type: veos
+    ip_addr: 192.168.0.122/24
+    version: 4.33.1.1F
+- C-LEAF3:
+    node_type: veos
+    ip_addr: 192.168.0.123/24
+    version: 4.33.1.1F
+- C-LEAF4:
+    node_type: veos
+    ip_addr: 192.168.0.124/24
+    version: 4.33.1.1F
+- C-LEAF5:
+    node_type: veos
+    ip_addr: 192.168.0.125/24
+    version: 4.33.1.1F
+- C-LEAF6:
+    node_type: veos
+    ip_addr: 192.168.0.126/24
+    version: 4.33.1.1F
+- C-LEAF7:
+    node_type: veos
+    ip_addr: 192.168.0.127/24
+    version: 4.33.1.1F
+- C-LEAF8:
+    node_type: veos
+    ip_addr: 192.168.0.128/24
+    version: 4.33.1.1F
+- C-SPINE1:
+    node_type: veos
+    ip_addr: 192.168.0.19/24
+    version: 4.33.1.1F
+- C-SPINE2:
+    node_type: veos
+    ip_addr: 192.168.0.20/24
+    version: 4.33.1.1F
+- D-LEAF1:
+    node_type: veos
+    ip_addr: 192.168.0.129/24
+    version: 4.33.1.1F
+- D-LEAF2:
+    node_type: veos
+    ip_addr: 192.168.0.130/24
+    version: 4.33.1.1F
+- D-LEAF3:
+    node_type: veos
+    ip_addr: 192.168.0.131/24
+    version: 4.33.1.1F
+- D-LEAF4:
+    node_type: veos
+    ip_addr: 192.168.0.132/24
+    version: 4.33.1.1F
+- D-LEAF5:
+    node_type: veos
+    ip_addr: 192.168.0.133/24
+    version: 4.33.1.1F
+- D-LEAF6:
+    node_type: veos
+    ip_addr: 192.168.0.134/24
+    version: 4.33.1.1F
+- D-LEAF7:
+    node_type: veos
+    ip_addr: 192.168.0.135/24
+    version: 4.33.1.1F
+- D-LEAF8:
+    node_type: veos
+    ip_addr: 192.168.0.136/24
+    version: 4.33.1.1F
+- D-SPINE1:
+    node_type: veos
+    ip_addr: 192.168.0.21/24
+    version: 4.33.1.1F
+- D-SPINE2:
+    node_type: veos
+    ip_addr: 192.168.0.22/24
+    version: 4.33.1.1F
+- D-SPINE3:
+    node_type: veos
+    ip_addr: 192.168.0.23/24
+    version: 4.33.1.1F
+- D-SPINE4:
+    node_type: veos
+    ip_addr: 192.168.0.24/24
+    version: 4.33.1.1F
+veos:
+  username: admin
+  password: admin
+links:
+- connection:
+  - A-LEAF1:Ethernet1
+  - A-SPINE1:Ethernet1
+- connection:
+  - A-LEAF1:Ethernet2
+  - A-SPINE2:Ethernet1
+- connection:
+  - A-LEAF1:Ethernet3
+  - A-SPINE3:Ethernet1
+- connection:
+  - A-LEAF1:Ethernet4
+  - A-SPINE4:Ethernet1
+- connection:
+  - A-LEAF1:Ethernet5
+  - A-LEAF2:Ethernet5
+- connection:
+  - A-LEAF1:Ethernet6
+  - A-LEAF2:Ethernet6
+- connection:
+  - A-LEAF1:Ethernet20
+  - A-SPINE5:Ethernet1
+- connection:
+  - A-LEAF2:Ethernet1
+  - A-SPINE1:Ethernet2
+- connection:
+  - A-LEAF2:Ethernet2
+  - A-SPINE2:Ethernet2
+- connection:
+  - A-LEAF2:Ethernet3
+  - A-SPINE3:Ethernet2
+- connection:
+  - A-LEAF2:Ethernet4
+  - A-SPINE4:Ethernet2
+- connection:
+  - A-LEAF2:Ethernet20
+  - A-SPINE5:Ethernet2
+- connection:
+  - A-LEAF3:Ethernet1
+  - A-SPINE1:Ethernet3
+- connection:
+  - A-LEAF3:Ethernet2
+  - A-SPINE2:Ethernet3
+- connection:
+  - A-LEAF3:Ethernet3
+  - A-SPINE3:Ethernet3
+- connection:
+  - A-LEAF3:Ethernet4
+  - A-SPINE4:Ethernet3
+- connection:
+  - A-LEAF3:Ethernet5
+  - A-LEAF4:Ethernet5
+- connection:
+  - A-LEAF3:Ethernet6
+  - A-LEAF4:Ethernet6
+- connection:
+  - A-LEAF3:Ethernet20
+  - A-SPINE5:Ethernet3
+- connection:
+  - A-LEAF4:Ethernet1
+  - A-SPINE1:Ethernet4
+- connection:
+  - A-LEAF4:Ethernet2
+  - A-SPINE2:Ethernet4
+- connection:
+  - A-LEAF4:Ethernet3
+  - A-SPINE3:Ethernet4
+- connection:
+  - A-LEAF4:Ethernet4
+  - A-SPINE4:Ethernet4
+- connection:
+  - A-LEAF4:Ethernet20
+  - A-SPINE5:Ethernet4
+- connection:
+  - A-LEAF5:Ethernet1
+  - A-SPINE1:Ethernet5
+- connection:
+  - A-LEAF5:Ethernet2
+  - A-SPINE2:Ethernet5
+- connection:
+  - A-LEAF5:Ethernet3
+  - A-SPINE3:Ethernet5
+- connection:
+  - A-LEAF5:Ethernet4
+  - A-SPINE4:Ethernet5
+- connection:
+  - A-LEAF5:Ethernet5
+  - A-LEAF6:Ethernet5
+- connection:
+  - A-LEAF5:Ethernet6
+  - A-LEAF6:Ethernet6
+- connection:
+  - A-LEAF5:Ethernet20
+  - A-SPINE5:Ethernet5
+- connection:
+  - A-LEAF6:Ethernet1
+  - A-SPINE1:Ethernet6
+- connection:
+  - A-LEAF6:Ethernet2
+  - A-SPINE2:Ethernet6
+- connection:
+  - A-LEAF6:Ethernet3
+  - A-SPINE3:Ethernet6
+- connection:
+  - A-LEAF6:Ethernet4
+  - A-SPINE4:Ethernet6
+- connection:
+  - A-LEAF6:Ethernet20
+  - A-SPINE5:Ethernet6
+- connection:
+  - A-LEAF7:Ethernet1
+  - A-SPINE1:Ethernet7
+- connection:
+  - A-LEAF7:Ethernet2
+  - A-SPINE2:Ethernet7
+- connection:
+  - A-LEAF7:Ethernet3
+  - A-SPINE3:Ethernet7
+- connection:
+  - A-LEAF7:Ethernet4
+  - A-SPINE4:Ethernet7
+- connection:
+  - A-LEAF7:Ethernet5
+  - A-LEAF8:Ethernet5
+- connection:
+  - A-LEAF7:Ethernet6
+  - A-LEAF8:Ethernet6
+- connection:
+  - A-LEAF7:Ethernet7
+  - BB1:Ethernet1
+- connection:
+  - A-LEAF7:Ethernet8
+  - BB2:Ethernet1
+- connection:
+  - A-LEAF7:Ethernet20
+  - A-SPINE5:Ethernet7
+- connection:
+  - A-LEAF8:Ethernet1
+  - A-SPINE1:Ethernet8
+- connection:
+  - A-LEAF8:Ethernet2
+  - A-SPINE2:Ethernet8
+- connection:
+  - A-LEAF8:Ethernet3
+  - A-SPINE3:Ethernet8
+- connection:
+  - A-LEAF8:Ethernet4
+  - A-SPINE4:Ethernet8
+- connection:
+  - A-LEAF8:Ethernet7
+  - BB1:Ethernet2
+- connection:
+  - A-LEAF8:Ethernet8
+  - BB2:Ethernet2
+- connection:
+  - A-LEAF8:Ethernet20
+  - A-SPINE5:Ethernet8
+- connection:
+  - B-LEAF1:Ethernet1
+  - B-SPINE1:Ethernet1
+- connection:
+  - B-LEAF1:Ethernet2
+  - B-SPINE2:Ethernet1
+- connection:
+  - B-LEAF1:Ethernet3
+  - B-SPINE3:Ethernet1
+- connection:
+  - B-LEAF1:Ethernet4
+  - B-SPINE4:Ethernet1
+- connection:
+  - B-LEAF2:Ethernet1
+  - B-SPINE1:Ethernet2
+- connection:
+  - B-LEAF2:Ethernet2
+  - B-SPINE2:Ethernet2
+- connection:
+  - B-LEAF2:Ethernet3
+  - B-SPINE3:Ethernet2
+- connection:
+  - B-LEAF2:Ethernet4
+  - B-SPINE4:Ethernet2
+- connection:
+  - B-LEAF3:Ethernet1
+  - B-SPINE1:Ethernet3
+- connection:
+  - B-LEAF3:Ethernet2
+  - B-SPINE2:Ethernet3
+- connection:
+  - B-LEAF3:Ethernet3
+  - B-SPINE3:Ethernet3
+- connection:
+  - B-LEAF3:Ethernet4
+  - B-SPINE4:Ethernet3
+- connection:
+  - B-LEAF4:Ethernet1
+  - B-SPINE1:Ethernet4
+- connection:
+  - B-LEAF4:Ethernet2
+  - B-SPINE2:Ethernet4
+- connection:
+  - B-LEAF4:Ethernet3
+  - B-SPINE3:Ethernet4
+- connection:
+  - B-LEAF4:Ethernet4
+  - B-SPINE4:Ethernet4
+- connection:
+  - B-LEAF5:Ethernet1
+  - B-SPINE1:Ethernet5
+- connection:
+  - B-LEAF5:Ethernet2
+  - B-SPINE2:Ethernet5
+- connection:
+  - B-LEAF5:Ethernet3
+  - B-SPINE3:Ethernet5
+- connection:
+  - B-LEAF5:Ethernet4
+  - B-SPINE4:Ethernet5
+- connection:
+  - B-LEAF6:Ethernet1
+  - B-SPINE1:Ethernet6
+- connection:
+  - B-LEAF6:Ethernet2
+  - B-SPINE2:Ethernet6
+- connection:
+  - B-LEAF6:Ethernet3
+  - B-SPINE3:Ethernet6
+- connection:
+  - B-LEAF6:Ethernet4
+  - B-SPINE4:Ethernet6
+- connection:
+  - B-LEAF7:Ethernet1
+  - B-SPINE1:Ethernet7
+- connection:
+  - B-LEAF7:Ethernet2
+  - B-SPINE2:Ethernet7
+- connection:
+  - B-LEAF7:Ethernet3
+  - B-SPINE3:Ethernet7
+- connection:
+  - B-LEAF7:Ethernet4
+  - B-SPINE4:Ethernet7
+- connection:
+  - B-LEAF7:Ethernet7
+  - BB1:Ethernet3
+- connection:
+  - B-LEAF7:Ethernet8
+  - BB2:Ethernet3
+- connection:
+  - B-LEAF8:Ethernet1
+  - B-SPINE1:Ethernet8
+- connection:
+  - B-LEAF8:Ethernet2
+  - B-SPINE2:Ethernet8
+- connection:
+  - B-LEAF8:Ethernet3
+  - B-SPINE3:Ethernet8
+- connection:
+  - B-LEAF8:Ethernet4
+  - B-SPINE4:Ethernet8
+- connection:
+  - B-LEAF8:Ethernet7
+  - BB1:Ethernet4
+- connection:
+  - B-LEAF8:Ethernet8
+  - BB2:Ethernet4
+- connection:
+  - BB1:Ethernet5
+  - C-LEAF7:Ethernet7
+- connection:
+  - BB1:Ethernet6
+  - C-LEAF8:Ethernet7
+- connection:
+  - BB1:Ethernet7
+  - D-LEAF7:Ethernet7
+- connection:
+  - BB1:Ethernet8
+  - D-LEAF8:Ethernet7
+- connection:
+  - BB2:Ethernet5
+  - C-LEAF7:Ethernet8
+- connection:
+  - BB2:Ethernet6
+  - C-LEAF8:Ethernet8
+- connection:
+  - BB2:Ethernet7
+  - D-LEAF7:Ethernet8
+- connection:
+  - BB2:Ethernet8
+  - D-LEAF8:Ethernet8
+- connection:
+  - C-LEAF1:Ethernet1
+  - C-SPINE1:Ethernet1
+- connection:
+  - C-LEAF1:Ethernet2
+  - C-SPINE2:Ethernet1
+- connection:
+  - C-LEAF1:Ethernet5
+  - C-LEAF2:Ethernet5
+- connection:
+  - C-LEAF1:Ethernet6
+  - C-LEAF2:Ethernet6
+- connection:
+  - C-LEAF2:Ethernet1
+  - C-SPINE1:Ethernet2
+- connection:
+  - C-LEAF2:Ethernet2
+  - C-SPINE2:Ethernet2
+- connection:
+  - C-LEAF3:Ethernet1
+  - C-SPINE1:Ethernet3
+- connection:
+  - C-LEAF3:Ethernet2
+  - C-SPINE2:Ethernet3
+- connection:
+  - C-LEAF3:Ethernet5
+  - C-LEAF4:Ethernet5
+- connection:
+  - C-LEAF3:Ethernet6
+  - C-LEAF4:Ethernet6
+- connection:
+  - C-LEAF4:Ethernet1
+  - C-SPINE1:Ethernet4
+- connection:
+  - C-LEAF4:Ethernet2
+  - C-SPINE2:Ethernet4
+- connection:
+  - C-LEAF5:Ethernet1
+  - C-SPINE1:Ethernet5
+- connection:
+  - C-LEAF5:Ethernet2
+  - C-SPINE2:Ethernet5
+- connection:
+  - C-LEAF5:Ethernet5
+  - C-LEAF6:Ethernet5
+- connection:
+  - C-LEAF5:Ethernet6
+  - C-LEAF6:Ethernet6
+- connection:
+  - C-LEAF6:Ethernet1
+  - C-SPINE1:Ethernet6
+- connection:
+  - C-LEAF6:Ethernet2
+  - C-SPINE2:Ethernet6
+- connection:
+  - C-LEAF7:Ethernet1
+  - C-SPINE1:Ethernet7
+- connection:
+  - C-LEAF7:Ethernet2
+  - C-SPINE2:Ethernet7
+- connection:
+  - C-LEAF7:Ethernet5
+  - C-LEAF8:Ethernet5
+- connection:
+  - C-LEAF7:Ethernet6
+  - C-LEAF8:Ethernet6
+- connection:
+  - C-LEAF8:Ethernet1
+  - C-SPINE1:Ethernet8
+- connection:
+  - C-LEAF8:Ethernet2
+  - C-SPINE2:Ethernet8
+- connection:
+  - D-LEAF1:Ethernet1
+  - D-SPINE1:Ethernet1
+- connection:
+  - D-LEAF1:Ethernet2
+  - D-SPINE2:Ethernet1
+- connection:
+  - D-LEAF1:Ethernet3
+  - D-SPINE3:Ethernet1
+- connection:
+  - D-LEAF1:Ethernet4
+  - D-SPINE4:Ethernet1
+- connection:
+  - D-LEAF1:Ethernet5
+  - D-LEAF2:Ethernet5
+- connection:
+  - D-LEAF1:Ethernet6
+  - D-LEAF2:Ethernet6
+- connection:
+  - D-LEAF2:Ethernet1
+  - D-SPINE1:Ethernet2
+- connection:
+  - D-LEAF2:Ethernet2
+  - D-SPINE2:Ethernet2
+- connection:
+  - D-LEAF2:Ethernet3
+  - D-SPINE3:Ethernet2
+- connection:
+  - D-LEAF2:Ethernet4
+  - D-SPINE4:Ethernet2
+- connection:
+  - D-LEAF3:Ethernet1
+  - D-SPINE1:Ethernet3
+- connection:
+  - D-LEAF3:Ethernet2
+  - D-SPINE2:Ethernet3
+- connection:
+  - D-LEAF3:Ethernet3
+  - D-SPINE3:Ethernet3
+- connection:
+  - D-LEAF3:Ethernet4
+  - D-SPINE4:Ethernet3
+- connection:
+  - D-LEAF3:Ethernet5
+  - D-LEAF4:Ethernet5
+- connection:
+  - D-LEAF3:Ethernet6
+  - D-LEAF4:Ethernet6
+- connection:
+  - D-LEAF4:Ethernet1
+  - D-SPINE1:Ethernet4
+- connection:
+  - D-LEAF4:Ethernet2
+  - D-SPINE2:Ethernet4
+- connection:
+  - D-LEAF4:Ethernet3
+  - D-SPINE3:Ethernet4
+- connection:
+  - D-LEAF4:Ethernet4
+  - D-SPINE4:Ethernet4
+- connection:
+  - D-LEAF5:Ethernet1
+  - D-SPINE1:Ethernet5
+- connection:
+  - D-LEAF5:Ethernet2
+  - D-SPINE2:Ethernet5
+- connection:
+  - D-LEAF5:Ethernet3
+  - D-SPINE3:Ethernet5
+- connection:
+  - D-LEAF5:Ethernet4
+  - D-SPINE4:Ethernet5
+- connection:
+  - D-LEAF5:Ethernet5
+  - D-LEAF6:Ethernet5
+- connection:
+  - D-LEAF5:Ethernet6
+  - D-LEAF6:Ethernet6
+- connection:
+  - D-LEAF6:Ethernet1
+  - D-SPINE1:Ethernet6
+- connection:
+  - D-LEAF6:Ethernet2
+  - D-SPINE2:Ethernet6
+- connection:
+  - D-LEAF6:Ethernet3
+  - D-SPINE3:Ethernet6
+- connection:
+  - D-LEAF6:Ethernet4
+  - D-SPINE4:Ethernet6
+- connection:
+  - D-LEAF7:Ethernet1
+  - D-SPINE1:Ethernet7
+- connection:
+  - D-LEAF7:Ethernet2
+  - D-SPINE2:Ethernet7
+- connection:
+  - D-LEAF7:Ethernet3
+  - D-SPINE3:Ethernet7
+- connection:
+  - D-LEAF7:Ethernet4
+  - D-SPINE4:Ethernet7
+- connection:
+  - D-LEAF8:Ethernet1
+  - D-SPINE1:Ethernet8
+- connection:
+  - D-LEAF8:Ethernet2
+  - D-SPINE2:Ethernet8
+- connection:
+  - D-LEAF8:Ethernet3
+  - D-SPINE3:Ethernet8
+- connection:
+  - D-LEAF8:Ethernet4
+  - D-SPINE4:Ethernet8
+
+vrfs:
+      - name: <str; required; unique>
+
+        # Explicitly enable or disable evpn_l3_multicast to override setting of `<network_services_key>.[].evpn_l3_multicast.enabled`.
+        # Allow override of `<network_services_key>.[].evpn_l3_multicast` node_settings.
+        # Requires `evpn_multicast` to also be set to `true`.
+        evpn_l3_multicast:
+          enabled: <bool>
+
+          # IPv4 address of evpn underlay l3 multicast group.
+          # To override multicast range set using the formula < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool > + < vrf_id - 1 > + < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset >.
+          evpn_underlay_l3_multicast_group: <str>
+
+          # For each group of nodes, allow configuration of EVPN PEG features.
+          evpn_peg:
+
+              # Restrict configuration to specific nodes.
+              # Will apply to all nodes with RP addresses configured if not set.
+            - nodes:
+                - <str>
+
+              # Enable EVPN PEG transit mode.
+              transit: <bool; default=False>
+
+        # For each group of nodes, allow configuration of RP Addresses & associated groups.
+        pim_rp_addresses:
+
+            # A minimum of one RP must be specified.
+          - rps:
+
+                # RP address.
+              - <str>
+
+            # Restrict configuration to specific nodes.
+            # Configuration Will be applied to all nodes if not set.
+            nodes:
+              - <str>
+            groups:
+
+                # Group_prefix/mask.
+              - <str>
+
+            # List of groups to associate with the RP addresses set in 'rps'.
+            # If access_list_name is set, a standard access-list will be configured matching these groups.
+            # Otherwise the groups are configured directly on the RP command.
+            access_list_name: <str>

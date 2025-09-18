@@ -14,6 +14,8 @@ all:
                   ansible_host: 192.168.0.13
                 A-SPINE4:
                   ansible_host: 192.168.0.14
+                A-SPINE5:
+                  ansible_host:  192.168.0.15
                   
             DOMAIN_A_L3_LEAVES:
               hosts:

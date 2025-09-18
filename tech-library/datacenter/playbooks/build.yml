@@ -1,11 +1,16 @@
 ---
 
-- name: Build Switch configuration
-  hosts: DOMAIN_A
-  connection: local
+- name: Build Configurations and Documentation
+  hosts: DOMAIN_B
   gather_facts: false
-  collections:
-    - arista.avd
+  vars:
+    # Adjust the output dirs to keep Digital Twin artifacts in a separate directory
+    # output_dir_name: "digital_twin/intended"
+    # documentation_dir_name: "digital_twin/documentation"
+    # # Set this flag to True to enable Digital Twin mode
+    # avd_digital_twin_mode: true
+  
+  
 
   tasks:
 

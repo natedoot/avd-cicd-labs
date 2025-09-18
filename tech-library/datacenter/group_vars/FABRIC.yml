@@ -67,8 +67,10 @@ generate_cv_tags:
 
 mgmt_interface_vrf: default
 
-name_servers:
-  - 10.255.0.2
+dns_settings:
+  servers:
+    - vrf: default
+      ip_address: 8.8.8.8
 
 ntp:
   servers:
@@ -84,10 +86,13 @@ local_users:
     role: network-admin
     sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
 
-cvp_instance_ips:
-  - 192.168.0.5
-cvp_token_file: /tmp/token
-terminattr_disable_aaa: True
+cv_settings:
+  onprem_clusters:
+    - name: act-cvp
+      servers:
+        - name: 192.168.0.5
+  terminattr:
+    disable_aaa: True
 
 custom_structured_configuration_aaa_authorization:
   exec:
@@ -115,3 +120,13 @@ mac_address_table:
 custom_structured_configuration_arp:
   aging:
     timeout_default: 1500
+
+custom_platform_settings:
+  - platforms:
+    - 7280R3
+    #feature_support:
+      #evpn_gateway_all_active_multihoming: true
+    reload_delay:
+      mlag: 900
+      non_mlag: 1020
+    tcam_profile: "{{ lookup('file', '../custom_tcam.txt') }}"

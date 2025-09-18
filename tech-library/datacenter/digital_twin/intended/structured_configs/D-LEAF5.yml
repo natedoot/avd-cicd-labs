@@ -1,0 +1,447 @@
+aaa_authorization:
+  exec:
+    default: local
+aaa_root:
+  disabled: true
+arp:
+  aging:
+    timeout_default: 1500
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  cvvrf: default
+  disable_aaa: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet5
+  description: MLAG_D-LEAF6_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 1000
+    mode: active
+  peer: D-LEAF6
+  peer_interface: Ethernet5
+  peer_type: mlag_peer
+- name: Ethernet6
+  description: MLAG_D-LEAF6_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 1000
+    mode: active
+  peer: D-LEAF6
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: P2P_D-SPINE1_Ethernet5
+  shutdown: false
+  mtu: 9214
+  ipv6_enable: true
+  peer: D-SPINE1
+  peer_interface: Ethernet5
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_D-SPINE2_Ethernet5
+  shutdown: false
+  mtu: 9214
+  ipv6_enable: true
+  peer: D-SPINE2
+  peer_interface: Ethernet5
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_D-SPINE3_Ethernet5
+  shutdown: false
+  mtu: 9214
+  ipv6_enable: true
+  peer: D-SPINE3
+  peer_interface: Ethernet5
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: P2P_D-SPINE4_Ethernet5
+  shutdown: false
+  mtu: 9214
+  ipv6_enable: true
+  peer: D-SPINE4
+  peer_interface: Ethernet5
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet7
+  description: SERVER_D6_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 7
+    mode: active
+  peer: D6
+  peer_interface: Ethernet1
+  peer_type: server
+  port_profile: DEFAULT
+hostname: D-LEAF5
+ip_igmp_snooping:
+  globally_enabled: true
+ip_name_servers:
+- ip_address: 10.255.0.2
+  vrf: default
+ip_routing_ipv6_interfaces: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:01
+ipv6_prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY-V6
+  sequence_numbers:
+  - sequence: 10
+    action: permit 2001:db8:d:1::/64 eq 128
+ipv6_unicast_routing: true
+is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$JIWpYntS5KpTMCGF$el6rGKnDYPqxKeMcJGutPctkOMiHrV/bej1DTmdTR8jEnuV/gQbTYa76slNHP1vwyN8Gq2kbNsMmXUwVhkwjy1
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.1.4.5/32
+  ipv6_address: 2001:db8:d:1::5/128
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 2.2.4.5/32
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: default
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.133/24
+  type: oob
+metadata:
+  platform: vEOS-lab
+  pod_name: pod-d
+  dc_name: domain-d
+  fabric_name: FABRIC
+  cv_tags:
+    device_tags:
+    - name: topology_hint_datacenter
+      value: domain-d
+    - name: topology_hint_fabric
+      value: FABRIC
+    - name: topology_hint_pod
+      value: pod-d
+    - name: topology_hint_rack
+      value: DOMAIN_D_LC
+  digital_twin:
+    environment: act
+    node_type: veos
+    ip_addr: 192.168.0.133/24
+    version: 4.33.1.1F
+    username: admin
+    password: admin
+mlag_configuration:
+  domain_id: '100'
+  local_interface: Vlan4094
+  peer_address: 169.254.0.1
+  peer_link: Port-Channel1000
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel1000
+  description: MLAG_D-LEAF6_Port-Channel1000
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel7
+  description: D6
+  shutdown: false
+  mlag: 7
+  spanning_tree_bpduguard: 'True'
+  spanning_tree_portfast: edge
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 70
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 1.1.4.0/24 eq 32
+  - sequence: 20
+    action: permit 2.2.4.0/24 eq 32
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  - sequence: 30
+    type: permit
+    match:
+    - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65456'
+  router_id: 1.1.4.5
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: MLAG-IPv4-UNDERLAY-PEER
+    type: ipv4
+    remote_as: '65456'
+    description: D-LEAF6
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
+  - name: LOCAL-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 2001:db8:d:1::c9
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65400'
+    peer: D-SPINE1
+    description: D-SPINE1_Loopback0
+  - ip_address: 2001:db8:d:1::ca
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65400'
+    peer: D-SPINE2
+    description: D-SPINE2_Loopback0
+  - ip_address: 2001:db8:d:1::cb
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65400'
+    peer: D-SPINE3
+    description: D-SPINE3_Loopback0
+  - ip_address: 2001:db8:d:1::cc
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65400'
+    peer: D-SPINE4
+    description: D-SPINE4_Loopback0
+  neighbor_interfaces:
+  - name: Vlan4093
+    remote_as: '65456'
+    peer: D-LEAF6
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
+    description: D-LEAF6_Vlan4093
+  - name: Ethernet1
+    remote_as: '65400'
+    peer: D-SPINE1
+    peer_group: LOCAL-UNDERLAY-PEERS
+    description: D-SPINE1_Ethernet5
+  - name: Ethernet2
+    remote_as: '65400'
+    peer: D-SPINE2
+    peer_group: LOCAL-UNDERLAY-PEERS
+    description: D-SPINE2_Ethernet5
+  - name: Ethernet3
+    remote_as: '65400'
+    peer: D-SPINE3
+    peer_group: LOCAL-UNDERLAY-PEERS
+    description: D-SPINE3_Ethernet5
+  - name: Ethernet4
+    remote_as: '65400'
+    peer: D-SPINE4
+    peer_group: LOCAL-UNDERLAY-PEERS
+    description: D-SPINE4_Ethernet5
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 70
+    tenant: DUALSTACK
+    rd: 1.1.4.5:10070
+    route_targets:
+      both:
+      - 10070:10070
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+    route:
+      import_match_failure_action: discard
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
+    - name: LOCAL-UNDERLAY-PEERS
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv6:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+    - name: LOCAL-UNDERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: Dev
+    rd: 1.1.4.5:50002
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 50002:50002
+      export:
+      - address_family: evpn
+        route_targets:
+        - 50002:50002
+    router_id: 1.1.4.5
+    neighbor_interfaces:
+    - name: Vlan3002
+      remote_as: '65456'
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: D-LEAF6_Vlan3002
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  edge_port:
+    bpduguard_default: true
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 0
+  no_spanning_tree_vlan: 4093-4094
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ipv6_enable: true
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 169.254.0.0/31
+  ipv6_address: 2001:db8::1/64
+  mtu: 9214
+  no_autostate: true
+- name: Vlan70
+  description: Brown
+  shutdown: false
+  vrf: Dev
+  ip_address_virtual: 10.70.70.1/24
+  ipv6_enable: true
+  ipv6_address_virtuals:
+  - 2001:db8:70:70::1/64
+  mtu: 9014
+  tenant: DUALSTACK
+- name: Vlan3002
+  description: MLAG_L3_VRF_Dev
+  shutdown: false
+  vrf: Dev
+  ipv6_enable: true
+  mtu: 9214
+  tenant: DUALSTACK
+  type: underlay_peering
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4093
+  name: MLAG_L3
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 70
+  name: Brown
+  tenant: DUALSTACK
+- id: 3002
+  name: MLAG_L3_VRF_Dev
+  trunk_groups:
+  - MLAG
+  tenant: DUALSTACK
+vrfs:
+- name: default
+  ip_routing: false
+- name: Dev
+  ipv6_routing: true
+  ip_routing_ipv6_interfaces: true
+  tenant: DUALSTACK
+vxlan_interface:
+  vxlan1:
+    description: D-LEAF5_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      virtual_router_encapsulation_mac_address: mlag-system-id
+      vlans:
+      - id: 70
+        vni: 10070
+      vrfs:
+      - name: Dev
+        vni: 50002

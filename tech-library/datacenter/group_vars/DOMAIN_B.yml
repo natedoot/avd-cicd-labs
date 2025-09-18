@@ -5,13 +5,13 @@ dc_name: domain-b
 pod_name: pod-b
 
 underlay_routing_protocol: isis
-overlay_routing_protocol: ibgp
+overlay_routing_protocol: ebgp
 
-custom_structured_configuration_router_bgp:
-  address_family_evpn:
-    evpn_ethernet_segment:
-      - domain: all
-        route_target_import: auto
+# custom_structured_configuration_router_bgp:
+#   address_family_evpn:
+#     evpn_ethernet_segment:
+#       - domain: all
+#         route_target_import: auto
 
 isis_area_id: 49.1111
 evpn_short_esi_prefix: '0000:000b:'
@@ -44,7 +44,7 @@ spine:
 
 l3leaf:
   defaults:
-    platform: vEOS-lab 
+    platform: 7280R3 
     loopback_ipv4_pool: 1.1.2.0/24
     loopback_ipv4_offset: 0
     vtep_loopback_ipv4_pool: 2.2.2.0/24
@@ -63,6 +63,8 @@ l3leaf:
       enabled: true
       groups:
         - name: CORE-LINKS
+    lacp_port_id_range:
+      enabled: true
     filter:
       tenants:
         - Prod
@@ -116,8 +118,8 @@ l3leaf:
         - Ethernet4
     - name: B-LEAF5
       id: 5
-      filter:
-        only_vlans_in_use: true
+      # filter:
+      #   only_vlans_in_use: true
       mgmt_ip: 192.168.0.115/24
       uplink_switch_interfaces: 
         - Ethernet5
@@ -126,8 +128,8 @@ l3leaf:
         - Ethernet5
     - name: B-LEAF6
       id: 6
-      filter:
-        only_vlans_in_use: true
+      # filter:
+      #   only_vlans_in_use: true
       mgmt_ip: 192.168.0.116/24
       uplink_switch_interfaces:
         - Ethernet6
@@ -149,6 +151,26 @@ l3leaf:
         evpn_l3:
           enabled: true
           inter_domain: true
+        # all_active_multihoming:
+
+        # # Enable Active Active Multihoming resiliency model.
+        #   enabled: true
+
+        #   # Enable D-path for use with BGP bestpath selection algorithm.
+        #   enable_d_path: true
+
+        #   # ASN(asplain):local_admin or ASN(asdot):local_admin notation
+        #   evpn_domain_id_local: "2:2"
+
+        #   # ASN(asplain):local_admin or ASN(asdot):local_admin notation
+        #   evpn_domain_id_remote: "99:99"
+        #   evpn_ethernet_segment: # required
+
+        #     # EVPN Ethernet Segment Identifier (Type 1 format)
+        #     identifier: 0000:bbbb:0007:0008:0000
+
+        #     # Low-order 6 bytes of ES-Import Route Target.
+        #     rt_import: 00:bb:bb:07:08:00
         remote_peers:
           - hostname: BB1
             bgp_as: 65500
@@ -156,10 +178,6 @@ l3leaf:
           - hostname: BB2
             bgp_as: 65500
             ip_address: 1.1.0.2
-      raw_eos_cli: |
-        dhcp relay
-          mlag peer-link requests disabled
-        agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
       nodes:
         - name: B-LEAF7
           id: 7
@@ -181,8 +199,8 @@ l3leaf:
 l2leaf:
   defaults:
     platform: vEOS-lab
-    # uplink_interfaces: ['Ethernet1', 'Ethernet2']
-    # uplink_switches: ['B-LEAF5','B-LEAF6']
+    uplink_interfaces: ['Ethernet1', 'Ethernet2']
+    uplink_switches: ['B-LEAF5','B-LEAF6']
     spanning_tree_mode: rapid-pvst
     raw_eos_cli: |
       agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
@@ -192,7 +210,7 @@ l2leaf:
     - name: B-SW1
       id: 1
       mgmt_ip: 192.168.0.119/24
-      # uplink_switch_interfaces:
-      #   - Ethernet7
-      #   - Ethernet7
+      uplink_switch_interfaces:
+        - Ethernet7
+        - Ethernet7
       

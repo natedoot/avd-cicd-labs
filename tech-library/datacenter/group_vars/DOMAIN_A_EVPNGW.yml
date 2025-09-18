@@ -1,5 +1,17 @@
 ---
 type: l3leaf
 
-evpn_multicast: false
-underlay_multicast: false
+# evpn_multicast: false
+# underlay_multicast: false
+
+# custom_structured_configuration_router_pim_sparse_mode:
+#   vrfs:
+
+#       # VRF Name.
+#     - name: Prod
+#       ipv4:
+#         anycast_rps:
+
+#             # Anycast RP Address.
+#           - address: 10.1.1.1
+#             #other_anycast_rp_addresses:

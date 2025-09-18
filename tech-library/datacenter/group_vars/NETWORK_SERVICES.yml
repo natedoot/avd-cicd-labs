@@ -11,6 +11,98 @@ tenants:
     remote_as: 65500
     route_map_out: RM-AS65000-IPV4-OUT
     shutdown: false
+  # evpn_l2_multicast:
+  #   enabled: true
+  evpn_l3_multicast:
+    enabled: true
+    evpn_underlay_l3_multicast_group_ipv4_pool: 232.1.1.1/24
+    evpn_underlay_l3_multicast_group_ipv4_pool_offset: -49999
+  vrfs:
+  - name: Prod
+    vrf_vni: 50001
+    mlag_ibgp_peering_ipv4_pool: 192.0.10.0/31
+    mlag_ibgp_peering_vlan: 3001
+    redistribute_mlag_ibgp_peering_vrfs: false
+    evpn_l3_multicast:
+      enabled: True
+    pim_rp_addresses:
+
+            # A minimum of one RP must be specified.
+      - rps:
+
+                # RP address.
+          - 10.10.10.100
+
+            # Restrict configuration to specific nodes.
+            # Configuration Will be applied to all nodes if not set.
+        nodes:
+          - A-LEAF7
+          - A-LEAF8
+    vtep_diagnostic:
+      loopback: 101
+      loopback_ip_pools:
+      - pod: pod-a
+        ipv4_pool: 10.101.101.0/27
+      - pod: pod-b
+        ipv4_pool: 10.101.102.0/27
+      - pod: pod-c
+        ipv4_pool: 10.101.103.0/27
+    svis:
+    - id: 10
+      name: Blue
+      profile: VLAN10
+    - id: 20
+      name: Green
+      profile: VLAN20
+    - id: 30
+      name: Orange
+      profile: VLAN30
+    - id: 40
+      name: Purple
+      profile: VLAN40
+    # - id: 100
+    #   name: PROD_VLAN100
+    #   ip_address: 10.10.100.1/24
+    #   enabled: true
+  - name: Dev
+    vrf_vni: 50002
+    mlag_ibgp_peering_ipv4_pool: 192.0.0.0/31
+    mlag_ibgp_peering_vlan: 3002
+    redistribute_mlag_ibgp_peering_vrfs: false
+    vtep_diagnostic:
+      loopback: 102
+      loopback_ip_pools:
+      - pod: pod-a
+        ipv4_pool: 10.102.101.0/27
+      - pod: pod-b
+        ipv4_pool: 10.102.102.0/27
+      - pod: pod-c
+        ipv4_pool: 10.102.103.0/27
+    
+    svis:
+    - id: 50
+      name: Yellow
+      profile: VLAN50
+    - id: 60
+      name: Red
+      profile: VLAN60
+    - id: 70
+      name: Brown
+      profile: VLAN70
+    - id: 80
+      name: Black
+      profile: VLAN80
+- name: Prod
+  mac_vrf_vni_base: 10000
+  # evpn_l2_multicast:
+  #   enabled: true
+  # evpn_l3_multicast:
+  #   enabled: true
+  #   evpn_underlay_l3_multicast_group_ipv4_pool: 232.1.1.1/24
+  #   evpn_underlay_l3_multicast_group_ipv4_pool_offset: -49999
+  l2vlans:
+    - id: 100
+      name: vlan100
   vrfs:
   - name: Prod
     vrf_vni: 50001
@@ -30,72 +122,8 @@ tenants:
     - id: 10
       name: Blue
       profile: VLAN10
-    - id: 20
-      name: Green
-      profile: VLAN20
-    - id: 30
-      name: Orange
-      profile: VLAN30
-    - id: 40
-      name: Purple
-      profile: VLAN40
-    - id: 100
-      name: PROD_VLAN100
-      ip_address: 10.10.100.1/24
-      enabled: true
-  - name: Dev
-    vrf_vni: 50002
-    vtep_diagnostic:
-      loopback: 102
-      loopback_ip_pools:
-      - pod: pod-a
-        ipv4_pool: 10.102.101.0/27
-      - pod: pod-b
-        ipv4_pool: 10.102.102.0/27
-      - pod: pod-c
-        ipv4_pool: 10.102.103.0/27
-    mlag_ibgp_peering_ipv4_pool: 192.0.0.0/31
-    mlag_ibgp_peering_vlan: 3002
-    redistribute_mlag_ibgp_peering_vrfs: false
-    svis:
-    - id: 50
-      name: Yellow
-      profile: VLAN50
-    - id: 60
-      name: Red
-      profile: VLAN60
-    - id: 70
-      name: Brown
-      profile: VLAN70
-    - id: 80
-      name: Black
-      profile: VLAN80
-- name: Prod
-  mac_vrf_vni_base: 10000
-  evpn_l2_multicast:
-    enabled: true
-  evpn_l3_multicast:
-    enabled: true
-    evpn_underlay_l3_multicast_group_ipv4_pool: 232.1.1.1/24
-    evpn_underlay_l3_multicast_group_ipv4_pool_offset: -49999
-  vrfs:
-  - name: Prod
-    vrf_vni: 50001
-    vtep_diagnostic:
-      loopback: 101
-      loopback_ip_pools:
-      - pod: pod-a
-        ipv4_pool: 10.101.101.0/27
-      - pod: pod-b
-        ipv4_pool: 10.101.102.0/27
-      - pod: pod-c
-        ipv4_pool: 10.101.103.0/27
-    mlag_ibgp_peering_ipv4_pool: 192.0.0.0/31
-    mlag_ibgp_peering_vlan: 3001
-    redistribute_mlag_ibgp_peering_vrfs: false
-    svis:
     - id: 11
-      name: Blue
+      name: VLAN11
       profile: VLAN10
     - id: 20
       name: Green
@@ -106,6 +134,34 @@ tenants:
     - id: 40
       name: Purple
       profile: VLAN40
+    l3_port_channels:
+    - name: Port-Channel20
+      node: B-LEAF5
+      structured_config:
+        switchport:
+          enabled: false
+        evpn_ethernet_segment:
+          identifier: 0000:0000:0000:0000:0010
+          redundancy: all-active
+    - name: Port-Channel20
+      node: B-LEAF6
+      structured_config:
+        switchport:
+          enabled: false
+    - name: Port-Channel20.3100
+      node: B-LEAF5
+      encapsulation_dot1q_vlan: 3100
+      ip_address: 10.10.100.2/29
+      structured_config: 
+        vrrp_ids:
+          - id: 31
+            priority_level: 120
+            ipv4:
+              address: 10.10.100.1
+    - name: Port-Channel20.3100
+      node: B-LEAF6
+      encapsulation_dot1q_vlan: 3100
+      ip_address: 10.10.100.3/29
 - name: Dev
   mac_vrf_vni_base: 10000
   evpn_l3_multicast:

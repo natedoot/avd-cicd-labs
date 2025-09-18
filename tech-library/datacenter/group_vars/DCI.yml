@@ -7,12 +7,12 @@ l3_edge:
       as: 
       - 65500
       - 65178 
-      include_in_underlay_protocol: true
+      include_in_underlay_protocol: false
     - name: DCI_B_profile
       as:
       - 65500
       - 65200
-      include_in_underlay_protocol: true
+      include_in_underlay_protocol: false
     - name: DCI_C_profile
       as:
       - 65500

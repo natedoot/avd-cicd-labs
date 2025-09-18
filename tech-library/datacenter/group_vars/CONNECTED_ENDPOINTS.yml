@@ -7,7 +7,7 @@ port_profiles:
   mode: access
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: true
-  vlans: 10
+  vlans: 11 
   port_channel:
     mode: active
 - profile: PROF-ORANGE-MLAG
@@ -197,6 +197,16 @@ servers:
     profile: DEFAULT
     vlans: 40
     description: HostL
+- name: HostTest
+  adapters:
+  - endpoint_ports:
+    - Ethernet1
+    switch_ports:
+    - Ethernet5
+    switches:
+    - B-SW1
+    profile: DEFAULT
+    vlans: 100
 - name: HostM
   adapters:
   - endpoint_ports:
@@ -408,14 +418,23 @@ servers:
       switches:
         - B-LEAF5
         - B-LEAF6
-      ethernet_segment:
-        short_esi: 0005:0006:0007
-        redundancy: single-active
-        designated_forwarder_algorithm: preference
-        designated_forwarder_preferences:
-        - 2000
-        - 1000
-        dont_preempt: true
+      # ethernet_segment:
+      #   short_esi: 0005:0006:0007
+      #   redundancy: single-active
+      #   designated_forwarder_algorithm: preference
+      #   designated_forwarder_preferences:
+      #   - 2000
+      #   - 1000
+      #   dont_preempt: true
+      port_channel:
+        channel_id: 20
+        mode: active
+        subinterfaces:
+        - number: 100
+          structured_config:
+            encapsulation_dot1q:
+              vlan: 100
+
 # network_ports:
 #   - switches:
 #     - B-LEAF5
@@ -425,17 +444,7 @@ servers:
 #     - Ethernet7
 #     enabled: true
 #     mode: trunk
-#     vlans: 40,80
-#     spanning_tree_portfast: edge
-#     link_tracking:
-#       enabled: true
-#       name: CORE-LINKS
-#     ethernet_segment:
-#       short_esi: 0005:0006:0007
-#       redundancy: single-active
-#       designated_forwarder_algorithm: preference
-#       designated_forwarder_preferences:
-#       - 2000
-#       - 1000
-#       dont_preempt: true
+#     vlans: 40,80,3100
+#     port_channel:
+#       channel_id: 20
 #     description: AA_TO_B-SW1
